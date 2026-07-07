@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Avaliação - Danças Gaúchas de Salão</title>
+    <style>
+        :root {
+            --green-primary: #1b5e20;
+            --green-secondary: #4c8c4a;
+            --green-light: #f1f8e9;
+            --green-border: #a5d6a7;
+            
+            --blue-primary: #0277bd;
+            --blue-secondary: #29b6f6;
+            --blue-light: #e1f5fe;
+            --blue-border: #90caf9;
+            
+            --bg-color: #e0e0e0;
+            --card-bg: #ffffff;
+            --text-color: #212121;
+            --border-color: #b0bec5;
+            --danger-color: #b71c1c;
+            --input-bg: #fafafa;
+            --border-radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 20px 40px; line-height: 1.5; }
+        
+        /* Estilos da Tela de Login */
+        #telaLogin { 
+            max-width: 400px; 
+            margin: 60px auto; 
+            background: var(--card-bg); 
+            padding: 40px 30px; 
+            border-radius: var(--border-radius); 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15); 
+            text-align: center; 
+            border-top: 8px solid var(--green-primary);
+            animation: fadeIn 0.4s ease;
+        }
+        #telaLogin h2 { margin: 20px 0; color: #37474f; font-size: 24px; text-transform: uppercase; }
+        #telaLogin input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 15px; background-color: var(--input-bg); }
+        #telaLogin input:focus { border-color: var(--green-primary); outline: none; }
+        #telaLogin button { width: 100%; padding: 12px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; color: white; background-color: var(--green-primary); transition: background 0.2s; }
+        #telaLogin button:hover { background-color: var(--green-secondary); }
+        #telaLogin button:disabled { background-color: #757575; cursor: not-allowed; }
+
+        /* Container Principal do Sistema */
+        .container { display: none; max-width: 96%; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: 0 6px 12px rgba(0,0,0,0.15); border-top: 8px solid #37474f; }
+        .container.modo-individual { border-top: 8px solid var(--green-primary); }
+        .container.modo-conjunto { border-top: 8px solid var(--blue-primary); }
+
+        header { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 4px solid var(--border-color); }
+        header h1 { font-size: 32px; text-transform: uppercase; letter-spacing: 1px; color: #37474f; }
+        header h2 { font-size: 22px; color: #424242; margin-top: 5px; font-weight: 600; }
+
+        /* Menu */
+        #menu-inicial { padding: 20px 0; }
+        .menu-secao { margin-bottom: 40px; background: #fdfdfd; padding: 25px; border-radius: 10px; border: 1px solid #cfd8dc; }
+        .menu-secao h3 { font-size: 22px; color: #37474f; margin-bottom: 20px; text-transform: uppercase; padding-left: 10px; }
+        .secao-indiv h3 { border-left: 6px solid var(--green-primary); }
+        .secao-conj h3 { border-left: 6px solid var(--blue-primary); }
+        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .menu-btn { color: white; border: none; padding: 20px 10px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-transform: uppercase; transition: transform 0.2s; }
+        .menu-btn.btn-indiv { background-color: var(--green-primary); }
+        .menu-btn.btn-indiv:hover { background-color: var(--green-secondary); transform: translateY(-2px); }
+        .menu-btn.btn-conj { background-color: var(--blue-primary); }
+        .menu-btn.btn-conj:hover { background-color: #01579b; transform: translateY(-2px); }
+
+        .page-content { display: none; animation: fadeIn 0.4s ease; }
+
+        /* Distribuição de espaço horizontal */
+        .info-group { 
+            display: grid; 
+            grid-template-columns: 1fr 3fr 1.2fr 1.8fr 1.8fr 0.8fr; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            padding: 20px; 
+            border-radius: 8px; 
+            border: 2px solid var(--border-color); 
+            background: #f5f5f5; 
+        }
+        .modo-individual .info-group { background: var(--green-light); border-color: var(--green-border); }
+        
+        .field-block { display: flex; flex-direction: column; }
+        .field-block label { font-weight: bold; font-size: 14px; margin-bottom: 6px; color: #37474f; }
+        .field-block input, .field-block select { padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 14px; background-color: var(--input-bg); width: 100%; }
+        .modo-individual .field-block input, .modo-individual .field-block select { border-color: var(--green-border); }
+        .field-block input[readonly] { background-color: #e9ecef; color: #495057; cursor: not-allowed; }
+
+        /* Área de Controles do Modo Conjunto */
+        .area-conjunto-controles { background: #e1f5fe; padding: 15px; border-radius: 8px; border: 2px dashed var(--blue-primary); margin-bottom: 25px; display: flex; align-items: flex-end; gap: 15px; }
+        .btn-add-conj { padding: 11px 20px; background-color: var(--blue-primary); color: white; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; }
+        .btn-add-conj:hover { background-color: #01579b; }
+
+        /* Configurações Visuais de Blocos de Conjunto */
+        .bloco-concorrente-conjunto { background: #ffffff; padding: 20px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: all 0.3s ease; }
+        .bloco-concorrente-conjunto .cabecalho-bloco-titulo { display: flex; justify-content: space-between; align-items: center; color: white; padding: 12px 15px; border-radius: 6px; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; font-size: 15px; letter-spacing: 0.5px; }
+        .btn-remover-bloco { background: var(--danger-color); color: white; border: none; padding: 6px 12px; font-size: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+        .btn-remover-bloco:hover { background: #c62828; }
+
+        /* ESTILO DO BLOCO ÍMPAR (AZUL) */
+        .bloco-estilo-azul { border: 3px solid var(--blue-primary); }
+        .bloco-estilo-azul .cabecalho-bloco-titulo { background-color: var(--blue-primary); }
+        .bloco-estilo-azul .info-group { background: var(--blue-light); border-color: var(--blue-border); }
+        .bloco-estilo-azul .info-group input, .bloco-estilo-azul .info-group select { border-color: var(--blue-border); }
+        .bloco-estilo-azul th.th-main { background-color: var(--blue-primary); }
+        .bloco-estilo-azul .results-box { background: var(--blue-light); border-color: var(--blue-border); }
+        .bloco-estilo-azul input.nota-input:focus { border-color: var(--blue-primary); outline: none; }
+
+        /* ESTILO DO BLOCO PAR (VERDE) */
+        .bloco-estilo-verde { border: 3px solid var(--green-primary); }
+        .bloco-estilo-verde .cabecalho-bloco-titulo { background-color: var(--green-primary); }
+        .bloco-estilo-verde .info-group { background: var(--green-light); border-color: var(--green-border); }
+        .bloco-estilo-verde .info-group input, .bloco-estilo-verde .info-group select { border-color: var(--green-border); }
+        .bloco-estilo-verde th.th-main { background-color: var(--green-primary); }
+        .bloco-estilo-verde .results-box { background: var(--green-light); border-color: var(--green-border); }
+        .bloco-estilo-verde input.nota-input:focus { border-color: var(--green-primary); outline: none; }
+
+        /* Tabelas */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 15px; background-color: #fff; }
+        th, td { border: 1px solid var(--border-color); padding: 10px 12px; text-align: left; vertical-align: middle; }
+        th:not(:first-child), td:not(:first-child) { text-align: center !important; }
+        th { color: white; text-transform: uppercase; background-color: #37474f; }
+        .modo-individual th.th-main { background-color: var(--green-primary); }
+        
+        .th-header-dance { display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center; }
+        .th-header-dance span { font-size: 13px; }
+        .th-header-dance select { width: 100%; max-width: 180px; padding: 5px; border: 2px solid #fff; border-radius: 4px; font-size: 13px; text-align: center; color: #000; background-color: #fff; font-weight: bold; }
+        .th-header-dance select.borda-erro { border: 2px solid var(--danger-color) !important; background-color: #ffebee; }
+
+        input.nota-input { width: 85px; padding: 6px; border: 2px solid var(--border-color); border-radius: 6px; text-align: center; font-size: 14px; font-weight: bold; display: block; margin: 0 auto; }
+        .modo-individual input.nota-input:focus { border-color: var(--green-primary); outline: none; }
+
+        .criatividade-section { padding: 20px; border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 25px; background: #fafafa; }
+        .criatividade-section h3 { margin-bottom: 15px; padding-bottom: 5px; font-size: 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); }
+        .criatividade-section h3 select { padding: 5px 10px; font-size: 14px; border: 1px solid var(--border-color); border-radius: 4px; width: 220px; text-align: center; font-weight: bold; background-color: #fff; }
+        .criatividade-section h3 select.borda-erro { border: 2px solid var(--danger-color) !important; background-color: #ffebee; }
+
+        /* Estilo dos Seletores Internos (Peão / Prenda) */
+        .wrapper-sub-seletores { display: inline-flex; gap: 10px; margin-left: 15px; background: #eceff1; padding: 3px 8px; border-radius: 4px; border: 1px solid #b0bec5; font-size: 13px; font-weight: 500; vertical-align: middle; }
+        .wrapper-sub-seletores label { display: flex; align-items: center; gap: 4px; cursor: pointer; color: #37474f; }
+        .wrapper-sub-seletores input[type="checkbox"] { cursor: pointer; width: 14px; height: 14px; }
+
+        /* Blocos de Resultados */
+        .results-box { padding: 20px; border-radius: 10px; margin-bottom: 20px; background: #f5f5f5; border: 2px solid var(--border-color); display: flex; justify-content: center; align-items: center; }
+        .modo-individual .results-box { background: var(--green-light); border-color: var(--green-border); }
+        
+        .results-grid { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 20px; justify-content: center; align-items: center; width: auto; margin: 0 auto; }
+        .result-item { background: white; padding: 12px 18px; border-radius: 8px; border: 2px solid var(--border-color); min-width: 140px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .result-item span { display: block; font-size: 11px; font-weight: bold; color: #455a64; margin-bottom: 5px; text-transform: uppercase; white-space: nowrap; }
+        .result-item strong { font-size: 22px; color: #37474f; font-weight: 700; }
+        footer { text-align: center; margin-top: 20px; font-size: 12px; color: rgb(0, 0, 0); }
+        .final-total { background: #ffebee !important; border: 2px solid #ffb74d !important; min-width: 260px; }
+        .final-total span { color: #c62828; }
+        .final-total strong { color: var(--danger-color) !important; font-size: 26px !important; }
+
+        /* Rodapé Fixo e Globais */
+        .rodape-geral-fixo { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; background: #eceff1; padding: 20px; border-radius: 8px; border: 2px solid #b0bec5; margin-top: 25px; }
+
+        .action-buttons { display: flex; gap: 20px; justify-content: center; margin-top: 25px; }
+        .btn-action { padding: 15px 35px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; color: white; }
+        .btn-enviar { background-color: #2e7d32; }
+        .btn-enviar:hover { background-color: #1b5e20; }
+        .btn-voltar { background-color: #37474f; }
+        .btn-voltar:hover { background-color: #212121; }
+        .btn-sair { background-color: var(--danger-color); }
+        .btn-sair:hover { background-color: #c62828; }
+
+        @pragma { display: none; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div id="telaLogin">
+    <img src="https://raw.githubusercontent.com/NossoEventoRS/Imagens/refs/heads/main/Logo.png" height="70">
+    <h2>Acesso Evaliador</h2>
+    <input type="text" id="userLogin" placeholder="Usuário (Ex: AV1)">
+    <input type="password" id="passLogin" placeholder="Senha">
+    <button onclick="fazerLogin()" id="btnLogin">ENTRAR</button>
+</div>
+
+<div class="container" id="container-sistema">
+
+<div class="header" style="display:grid;grid-template-columns:100px 1fr 100px;align-items:center">
+    <img src="https://raw.githubusercontent.com/NossoEventoRS/Imagens/refs/heads/main/Logo_MTG.png" height="80">
+    <div style="text-align:center">
+        <strong><h1>MTG – MOVIMENTO TRADICIONALISTA GAÚCHO</h1></strong><br>
+        <h2 id="subtitulo-sistema">Enart 2026 | Fase Regional | Modalidade: Danças Gaúchas de Salão</h2>
+        <h3 id="titulo-criterio-atual" style="text-align: center; margin-top: 5px; color: #ff0901; font-weight: bold; letter-spacing: 1px;">Planilha de Avaliação</h3>
+    </div>
+    <img src="https://raw.githubusercontent.com/NossoEventoRS/Imagens/refs/heads/main/Logo_12RT.png" height="80">
+</div>
+    
+    <div id="menu-inicial">
+        <div class="menu-secao secao-indiv">
+            <h3>Planilhas Individuais (Danças 1 e 2)</h3>
+            <div class="menu-grid">
+                <button class="menu-btn btn-indiv" onclick="abrirPlanilha('Correção_Coreografica', 'INDIVIDUAL')">Correção Coreográfica</button>
+                <button class="menu-btn btn-indiv" onclick="abrirPlanilha('Ritmo_Harmonia', 'INDIVIDUAL')">Ritmo e Harmonia</button>
+                <button class="menu-btn btn-indiv" onclick="abrirPlanilha('Interpretação_Artística', 'INDIVIDUAL')">Interpretação Artística</button>
+                <button class="menu-btn btn-indiv" onclick="abrirPlanilha('Criatividade_Variação', 'INDIVIDUAL')">Criatividade e Variação</button>
+            </div>
+        </div>
+
+        <div class="menu-secao secao-conj">
+            <h3>Planilhas de Conjunto</h3>
+            <div class="menu-grid">
+                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Correção_Coreografica_CJ', 'CONJUNTO')">Correção Coreográfica</button>
+                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Ritmo_Harmonia_CJ', 'CONJUNTO')">Ritmo e Harmonia</button>
+                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Interpretação_Artística_CJ', 'CONJUNTO')">Interpretação Artística</button>
+                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Criatividade_Variação_CJ', 'CONJUNTO')">Criatividade e Variação</button>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; margin-top: 20px; padding: 15px; background: #fafafa; border-radius: 10px; border: 1px solid #cfd8dc;">
+            <button type="button" class="btn-action btn-sair" onclick="sairParaLogin()" style="width: 100%; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Sair / Trocar Avaliador</button>
+        </div>
+    </div>
+
+    <form id="form-avaliacao" class="page-content" onsubmit="event.preventDefault();">
+        
+        <div id="wrapper-cabecalho-individual">
+            <div class="info-group">
+                <div class="field-block">
+                    <label>Código:</label>
+                    <select id="cod_candidato" name="numero candidato" onchange="selecionarCandidato(this.value)">
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+                <div class="field-block"><label>Concorrente (Peão e Prenda):</label><input type="text" id="concorrente" readonly></div>
+                <div class="field-block"><label>Categoria:</label><input type="text" id="categoria" readonly></div>
+                <div class="field-block"><label>Entidade:</label><input type="text" id="entidade" readonly></div>
+                <div class="field-block"><label>Município:</label><input type="text" id="municipio" readonly></div>
+                <div class="field-block"><label>RT:</label><input type="text" id="rt" readonly></div>
+            </div>
+        </div>
+
+        <div id="wrapper-cabecalho-conjunto" style="display: none;">
+            <div class="area-conjunto-controles">
+                <div class="field-block" style="width: 250px;">
+                    <label>Adicionar Candidato ao Conjunto:</label>
+                    <select id="select_conjunto_add">
+                        <option value="">Escolha...</option>
+                    </select>
+                </div>
+                <button type="button" class="btn-add-conj" onclick="adicionarConcorrenteAoConjunto()">+ Adicionar à Tela</button>
+                <span style="font-size: 13px; color: #455a64; font-style: italic; margin-bottom: 6px;">Permite renderizar e avaliar múltiplos concorrentes ao mesmo tempo com cores alternadas.</span>
+            </div>
+        </div>
+
+        <div id="dinamico-planilha"></div>
+
+        <div id="results-box-individual" class="results-box">
+            <div class="results-grid">
+                <div class="result-item"><span>Nota Dança 1</span><strong id="label-n1">4,00</strong></div>
+                <div class="result-item"><span>Nota Dança 2</span><strong id="label-n2">4,00</strong></div>
+                <div class="result-item final-total"><span>NOTA FINAL CRITÉRIO</span><strong id="label-total">8,00</strong></div>
+            </div>
+        </div>
+
+        <div id="rodape-inputs-individual">
+            <div class="info-group" style="grid-template-columns: 1fr 5fr; margin-bottom: 15px; padding: 15px;">
+                <div class="field-block">
+                    <label style="color: var(--danger-color);" id="lbl-indumentaria">DESC1.INDU:</label>
+                    <input type="text" id="desc_indumentaria" value="0,00" class="nota-input" oninput="formatarNota(this)" onblur="finalizarNota(this)" style="width:100%; border-color:var(--danger-color); text-align: center;">
+                </div>
+                <div class="field-block">
+                    <label>Observações / Justificativas:</label>
+                    <input type="text" id="obs_campo" placeholder="Digite as observações e justificativas aqui..." style="width: 100%;">
+                </div>
+            </div>
+        </div>
+
+        <div class="rodape-generico-sistema">
+            <div class="rodape-geral-fixo">
+                <div class="field-block">
+                    <label>Avaliador Logado:</label>
+                    <input type="text" id="avaliador" readonly style="font-weight: bold; background-color: #e9ecef;">
+                </div>
+                <div class="field-block">
+                    <label>Data / Hora Computada:</label>
+                    <input type="text" id="data_hora" readonly style="text-align: center; font-weight: bold; background-color: #e9ecef;">
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button type="button" class="btn-action btn-enviar" onclick="enviarDadosParaSheets()">Enviar Avaliação</button>
+            <button type="button" class="btn-action btn-voltar" onclick="voltarMenu()">Voltar para Menu</button>
+            <button type="button" class="btn-action btn-sair" onclick="sairParaLogin()">Sair / Trocar Avaliador</button>
+        </div>
+    </form>
+</div>
+<footer>
+  Sistema de Inscrição - NossoEventoRS © 2026 | dúvidas: contato@nossoeventors.com.br
+</footer>
+
+<script>
+    let bancoCandidatos = {};
+    let abaAtiva = "";
+    let modoAtivo = "";
+    let avaliadorLogado = ""; 
+    let concorrentesNoConjuntoAtivo = []; 
+    let totalAdicionadosContador = 0;
+
+    const URL_SCRIPT_ENVIO = "https://script.google.com/macros/s/AKfycbwXMSlv17RLKPmvRXPEOmbjXKI1Pc9lXvfKzCilI_2BI0B-FTYnDmIdFGWabrT6VrstNg/exec"
+    const OPCOES_DANCAS_HTML = `
+        <option value="">Selecione...</option>
+        <option value="Chote">Chote</option>
+        <option value="Milonga">Milonga</option>
+        <option value="Bugio">Bugio</option>
+        <option value="Polca">Polca</option>
+        <option value="Vaneira">Vaneira</option>
+        <option value="Chamarra">Chamarra</option>
+        <option value="Chamamé">Chamamé</option>
+        <option value="Rancheira">Rancheira</option>
+        <option value="Valsa">Valsa</option>
+        <option value="Terol">Terol</option>
+        <option value="Mazurca">Mazurca</option>
+    `;
+
+    // Matrizes de textos fixos mapeados para as linhas
+    const TEXTOS_COREOGRAFIA = [
+        "1) Postura corporal e do par inadequada na execução dos ritmos.",
+        "2) Erro de desenho coreográfico ou evolução incorreta na pista.",
+        "3) Execução desordenada ou fora do padrão tradicional do ritmo.",
+        "4) Entrada ou saída de pista incorreta ou fora de compasso.",
+        "5) Falta de sincronia geral nas movimentações obrigatórias.",
+        "6) Perda de alinhamento em relação à sala/outros concorrentes.",
+        "7) Interrupções drásticas na continuidade dos passos do casal."
+    ];
+
+    const TEXTOS_RITMO = [
+        "1) Ritmo não ordenado com o compasso da música.",
+        "2) Distância entre o par.",
+        "3) Desarmonia entre o par na condução.",
+        "4) Desarmonia entre o par na execução dos passos/movimentos."
+    ];
+
+    const TEXTOS_INTERPRETACAO = [
+        "1) Expressão corporal inadequada e falta de naturalidade.",
+        "2) Expressão facial mecânica ou em desacordo com o sentimento do ritmo.",
+        "3) Ausência de comunicação/espontaneidade entre o par.",
+        "4) Falta de vivacidade ou excesso de teatralidade forçada."
+    ];
+
+    const TEXTOS_CRIATIVIDADE_D1 = [
+        "1) Apresentar variações de passos/movimentos de acordo com dança.",
+        "2) Explorar fluentemente o espaço na sala e respeitar o raio de ação dos demais pares.",
+        "3) Comprometimento com a tradicionalidade.",
+        "4) Intercorrências (pisar no vestido, perda de acessórios, etc.)"
+    ];
+
+    const TEXTOS_CRIATIVIDADE_D2 = [
+        "1) Apresentar variações de passos/movimentos de acordo com dança.",
+        "2) Explorar fluentemente o espaço na sala e respeitar o raio de ação dos demais pares.",
+        "3) Comprometimento com a tradicionalidade.",
+        "4) Intercorrências (pisar no vestido, perda de acessórios, etc.)"
+    ];
+
+    const TEXTOS_CRIATIVIDADE_DC = [
+        "1) Apresentar variações de passos/movimentos de acordo com dança.",
+        "2) Explorar fluentemente o espaço na sala e respeitar o raio de ação dos demais pares.",
+        "3) Comprometimento com a tradicionalidade.",
+        "4) Intercorrências (pisar no vestido, perda de acessórios, etc.)"
+    ];
+
+    window.onload = function() {
+        if (URL_SCRIPT_ENVIO !== "" && !URL_SCRIPT_ENVIO.includes("SUA_URL")) {
+            fetch(`${URL_SCRIPT_ENVIO}?acao=candidatos`)
+                .then(res => res.json())
+                .then(dadosCandidatos => {
+                    bancoCandidatos = {};
+                    dadosCandidatos.forEach(candidato => {
+                        bancoCandidatos[candidato.codigo.toString().trim()] = {
+                            codigo: candidato.codigo || "",
+                            concorrente: candidato.concorrente || "",
+                            categoria: candidato.categoria || "",
+                            entidade: candidato.entidade || "",
+                            municipio: candidato.municipio || "",
+                            rt: candidato.rt || ""
+                        };
+                    });
+                    carregarCandidatosNoSelect(dadosCandidatos);
+                })
+                .catch(err => console.error("Erro ao indexar candidatos: ", err));
+        }
+        setInterval(atualizarRelogio, 1000);
+    }
+
+    // Monitora cliques em checkboxes dinâmicos de Peão e Prenda e adiciona o texto à observação
+    document.addEventListener("change", function(evento) {
+        if (evento.target && evento.target.classList.contains("obs-trigger")) {
+            const checkbox = evento.target;
+            let idCampoObs = checkbox.getAttribute("data-target");
+            const textoErro = checkbox.getAttribute("data-text");
+            
+            // CORREÇÃO ANTERIOR: Redireciona o alvo na planilha individual para o ID correto
+            if (idCampoObs === "obs-ritmo-indiv" || idCampoObs === "obs-arte-indiv") {
+                idCampoObs = "obs_campo";
+            }
+
+            const campoObs = document.getElementById(idCampoObs);
+            if (!campoObs) return;
+
+            let obsAtual = campoObs.value.trim();
+
+            if (checkbox.checked) {
+                if (obsAtual === "") {
+                    campoObs.value = textoErro;
+                } else if (!obsAtual.includes(textoErro)) {
+                    campoObs.value = obsAtual + " | " + textoErro;
+                }
+            } else {
+                if (obsAtual.includes(" | " + textoErro)) {
+                    campoObs.value = obsAtual.replace(" | " + textoErro, "");
+                } else if (obsAtual.includes(textoErro + " | ")) {
+                    campoObs.value = obsAtual.replace(textoErro + " | ", "");
+                } else if (obsAtual === textoErro) {
+                    campoObs.value = "";
+                }
+            }
+        }
+    });
+
+    function fazerLogin() {
+        const usuario = document.getElementById('userLogin').value.trim();
+        const senha = document.getElementById('passLogin').value.trim();
+        const btn = document.getElementById('btnLogin');
+
+        if (!usuario || !senha) {
+            alert("Por favor, preencha todos os campos do acesso.");
+            return;
+        }
+
+        btn.disabled = true; btn.innerText = "Verificando...";
+
+        fetch(`${URL_SCRIPT_ENVIO}?acao=login&usuario=${encodeURIComponent(usuario)}&senha=${encodeURIComponent(senha)}`)
+            .then(res => res.json())
+            .then(resultado => {
+                if (resultado.sucesso) {
+                    avaliadorLogado = resultado.nomeAvaliador;
+                    document.getElementById('avaliador').value = avaliadorLogado;
+                    document.getElementById('telaLogin').style.display = 'none';
+                    document.getElementById('container-sistema').style.display = 'block';
+                } else {
+                    alert(resultado.mensagem || "Usuário ou senha inválidos.");
+                    btn.disabled = false; btn.innerText = "ENTRAR";
+                }
+            })
+            .catch(erro => {
+                console.error("Erro no login:", erro);
+                alert("Erro de comunicação com o servidor.");
+                btn.disabled = false; btn.innerText = "ENTRAR";
+            });
+    }
+
+    function sairParaLogin() {
+        if (!confirm("Deseja realmente sair e retornar à tela de login? Quaisquer dados não enviados serão perdidos.")) return;
+        
+        avaliadorLogado = "";
+        document.getElementById('userLogin').value = "";
+        document.getElementById('passLogin').value = "";
+        
+        const btnLogin = document.getElementById('btnLogin');
+        btnLogin.disabled = false;
+        btnLogin.innerText = "ENTRAR";
+
+        document.getElementById("form-avaliacao").style.display = "none";
+        document.getElementById("menu-inicial").style.display = "block";
+        document.getElementById("container-sistema").className = "container";
+        document.getElementById("form-avaliacao").reset();
+        
+        limparCamposCandidato();
+        concorrentesNoConjuntoAtivo = [];
+        totalAdicionadosContador = 0;
+        document.getElementById("dinamico-planilha").innerHTML = "";
+
+        document.getElementById('container-sistema').style.display = 'none';
+        document.getElementById('telaLogin').style.display = 'block';
+    }
+
+    function carregarCandidatosNoSelect(dados) {
+        const selectIndiv = document.getElementById("cod_candidato");
+        const selectConj = document.getElementById("select_conjunto_add");
+        
+        selectIndiv.innerHTML = '<option value="">Selecione...</option>';
+        selectConj.innerHTML = '<option value="">Escolha...</option>';
+
+        dados.forEach(item => {
+            const cod = String(item.codigo || "").trim();
+            if(cod) {
+                let opt1 = document.createElement("option"); opt1.value = cod; opt1.text = cod;
+                selectIndiv.add(opt1);
+
+                let opt2 = document.createElement("option"); opt2.value = cod; opt2.text = `${cod} - ${item.concorrente}`;
+                selectConj.add(opt2);
+            }
+        });
+    }
+
+    function selecionarCandidato(cod) {
+        const c = bancoCandidatos[String(cod).trim()];
+        if(c) {
+            document.getElementById("concorrente").value = c.concorrente;
+            document.getElementById("categoria").value = c.categoria;
+            document.getElementById("entidade").value = c.entidade;
+            document.getElementById("municipio").value = c.municipio;
+            document.getElementById("rt").value = c.rt;
+        } else {
+            limparCamposCandidato();
+        }
+    }
+
+    function limparCamposCandidato() {
+        document.getElementById("concorrente").value = "";
+        document.getElementById("categoria").value = "";
+        document.getElementById("entidade").value = "";
+        document.getElementById("municipio").value = "";
+        document.getElementById("rt").value = "";
+    }
+
+    // NOVA FUNÇÃO DE LIMPEZA GLOBAL APÓS O ENVIO BEM SUCEDIDO
+    function limparFormularioAposEnvio() {
+        // Reseta o código do candidato e limpa as infos dele
+        const seletorCandidato = document.getElementById("cod_candidato");
+        if (seletorCandidato) seletorCandidato.value = "";
+        limparCamposCandidato();
+
+        // Reseta todos os seletores de dança obrigatórios para vazio
+        const todosSeletoresDanca = document.querySelectorAll(".select-danca-obrigatorio");
+        todosSeletoresDanca.forEach(select => { select.value = ""; });
+
+        // Reseta todas as notas digitadas
+        const todosInputsNotas = document.querySelectorAll(".nota-input");
+        todosInputsNotas.forEach(inp => {
+            if (inp.id === "desc_indumentaria") { 
+                inp.value = "0,00"; 
+            } else { 
+                inp.value = ""; 
+            }
+        });
+
+        // Limpa o campo de observação principal
+        const campoObs = document.getElementById("obs_campo");
+        if (campoObs) campoObs.value = "";
+
+        // IMPLEMENTAÇÃO SOLICITADA: Desmarca absolutamente todos os checkboxes (Peão e Prenda)
+        const checkboxes = document.querySelectorAll(".obs-trigger");
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        // Recalcula o placar zerado da tela
+        if (typeof atualizarCalculos === "function") atualizarCalculos();
+    }
+
+    function atualizarRelogio() {
+        const agora = new Date();
+        document.getElementById('data_hora').value = `${String(agora.getDate()).padStart(2,'0')}/${String(agora.getMonth()+1).padStart(2,'0')}/${agora.getFullYear()} ${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}:${String(agora.getSeconds()).padStart(2,'0')}`;
+    }
+
+    function abrirPlanilha(aba, modo) {
+    abaAtiva = aba;
+    modoAtivo = modo;
+    concorrentesNoConjuntoAtivo = [];
+    totalAdicionadosContador = 0;
+    
+    const container = document.getElementById("container-sistema");
+    container.className = "container " + (modo === "INDIVIDUAL" ? "modo-individual" : "modo-conjunto");
+    
+    document.getElementById("menu-inicial").style.display = "none";
+    document.getElementById("form-avaliacao").style.display = "block";
+    
+    // ATUALIZAÇÃO DO CRITÉRIO NO CABEÇALHO
+    const elementoTitulo = document.getElementById("titulo-criterio-atual");
+    if (elementoTitulo) {
+        let nomeCriterio = "";
+        if (aba.startsWith("Correção")) nomeCriterio = "CORREÇÃO COREOGRÁFICA";
+        else if (aba.startsWith("Ritmo")) nomeCriterio = "RITMO E HARMONIA";
+        else if (aba.startsWith("Interpretação")) nomeCriterio = "INTERPRETAÇÃO ARTÍSTICA";
+        else if (aba.startsWith("Criatividade")) nomeCriterio = "CRIATIVIDADE E VARIAÇÃO";
+        else nomeCriterio = aba.replace("_", " ");
+
+        elementoTitulo.innerText = `CRITÉRIO: ${nomeCriterio} (${modo})`;
+    }
+
+    let labelIndumentaria = "Desconto Indumentária:";
+    document.getElementById("lbl-indumentaria").innerText = labelIndumentaria;
+
+    if(modo === "INDIVIDUAL") {
+        document.getElementById("wrapper-cabecalho-individual").style.display = "block";
+        document.getElementById("wrapper-cabecalho-conjunto").style.display = "none";
+        document.getElementById("results-box-individual").style.display = "block";
+        document.getElementById("rodape-inputs-individual").style.display = "block";
+        document.getElementById("cod_candidato").required = true;
+    } else {
+        document.getElementById("wrapper-cabecalho-individual").style.display = "none";
+        document.getElementById("wrapper-cabecalho-conjunto").style.display = "block";
+        document.getElementById("results-box-individual").style.display = "none";
+        document.getElementById("rodape-inputs-individual").style.display = "none";
+        document.getElementById("cod_candidato").required = false;
+    }
+
+    renderizarCamposDinamicos();
+    atualizarCalculos();
+}
+
+    function voltarMenu() {
+        document.getElementById("form-avaliacao").style.display = "none";
+        document.getElementById("menu-inicial").style.display = "block";
+        document.getElementById("container-sistema").className = "container";
+        document.getElementById("form-avaliacao").reset();
+        document.getElementById('avaliador').value = avaliadorLogado;
+        limparCamposCandidato();
+        concorrentesNoConjuntoAtivo = [];
+        totalAdicionadosContador = 0;
+        document.getElementById("dinamico-planilha").innerHTML = "";
+    }
+
+    function formatarNota(input) {
+        let v = input.value.replace(/[^\d,.]/g, '').replace(/\./g, ',');
+        const partes = v.split(',');
+        if (partes.length > 2) v = partes[0] + ',' + partes.slice(1).join('');
+        input.value = v;
+        atualizarCalculos();
+    }
+
+    function finalizarNota(input) {
+        if (!input.value.trim()) return;
+        let n = parseFloat(input.value.replace(',', '.'));
+        input.value = isNaN(n) ? "0,00" : n.toFixed(2).replace('.', ',');
+        atualizarCalculos();
+    }
+
+    function obterFloatPorElemento(el) {
+        if(!el) return 0;
+        let val = el.value.replace(',', '.');
+        let f = parseFloat(val);
+        return isNaN(f) ? 0 : f;
+    }
+
+    function renderizarCamposDinamicos() {
+        const area = document.getElementById("dinamico-planilha");
+        area.innerHTML = "";
+        
+        if (modoAtivo === "INDIVIDUAL") {
+            let html = "";
+
+            if (abaAtiva === "Correção_Coreografica") {
+                html = `<table><thead><tr><th class="th-main" style="width: 60%;">Correção Coreográfica (Itens)</th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 1</span><select id="CCdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 2</span><select id="CCdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th></tr></thead><tbody>
+                        ${TEXTOS_COREOGRAFIA.map((txt, index) => {
+                            let i = index + 1;
+                            return `<tr>
+                                <td>${txt}</td>
+                                <td><input type="text" class="nota-input ccd1" id="CCD1desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
+                                <td><input type="text" class="nota-input ccd2" id="CCD2desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody></table>`;
+            } 
+            else if (abaAtiva === "Ritmo_Harmonia") {
+                html = `<table><thead><tr><th class="th-main" style="width: 60%;">Ritmo e Harmonia (Itens)</th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 1</span><select id="RHdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 2</span><select id="RHdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th></tr></thead><tbody>
+                        ${TEXTOS_RITMO.map((txt, index) => {
+                            let i = index + 1;
+                            let subSeletores = "";
+                            if (i === 1) {
+                                subSeletores = `
+                                <div class="wrapper-sub-seletores">
+                                    <label><input type="checkbox" class="obs-trigger" data-target="obs-ritmo-indiv" data-text="Ritmo não ordenado: Peão"> Peão</label>
+                                    <label><input type="checkbox" class="obs-trigger" data-target="obs-ritmo-indiv" data-text="Ritmo não ordenado: Prenda"> Prenda</label>
+                                </div>`;
+                            }
+                            return `<tr>
+                                <td><span>${txt}</span> ${subSeletores}</td>
+                                <td><input type="text" class="nota-input rhd1" id="RHD1desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
+                                <td><input type="text" class="nota-input rhd2" id="RHD2desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody></table>`;
+            } 
+            else if (abaAtiva === "Interpretação_Artística") {
+                html = `<table><thead><tr><th class="th-main" style="width: 60%;">Interpretação Artística (Itens)</th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 1</span><select id="IAdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 2</span><select id="IAdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th></tr></thead><tbody>
+                        ${TEXTOS_INTERPRETACAO.map((txt, index) => {
+                            let i = index + 1;
+                            let subSeletores = "";
+                            if (i === 1) {
+                                subSeletores = `
+                                <div class="wrapper-sub-seletores">
+                                    <label><input type="checkbox" class="obs-trigger" data-target="obs-arte-indiv" data-text="Expressão corporal inadequada: Peão"> Peão</label>
+                                    <label><input type="checkbox" class="obs-trigger" data-target="obs-arte-indiv" data-text="Expressão corporal inadequada: Prenda"> Prenda</label>
+                                </div>`;
+                            } else if (i === 2) {
+                                subSeletores = `
+                                <div class="wrapper-sub-seletores">
+                                    <label><input type="checkbox" class="obs-trigger" data-target="obs-arte-indiv" data-text="Expressão facial inadequada: Peão"> Peão</label>
+                                    <label><input type="checkbox" class="obs-trigger" data-target="obs-arte-indiv" data-text="Expressão facial inadequada: Prenda"> Prenda</label>
+                                </div>`;
+                            }
+                            return `<tr>
+                                <td><span>${txt}</span> ${subSeletores}</td>
+                                <td><input type="text" class="nota-input iad1" id="IAD1desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
+                                <td><input type="text" class="nota-input iad2" id="IAD2desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody></table>`;
+            } 
+            else if (abaAtiva === "Criatividade_Variação") {
+                html = `<div class="criatividade-section"><h3>Dança 1 - Criatividade (Máx 4,00) <select id="CVdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></h3><table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
+                            ${TEXTOS_CRIATIVIDADE_D1.map((txt, index) => {
+                                let i = index + 1;
+                                return `<tr><td>${txt}</td><td><input type="text" class="nota-input cvd1" id="CVD1desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td></tr>`;
+                            }).join('')}
+                        </tbody></table></div>
+                <div class="criatividade-section"><h3>Dança 2 - Variações (Máx 4,00) <select id="CVdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></h3><table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
+                            ${TEXTOS_CRIATIVIDADE_D2.map((txt, index) => {
+                                let i = index + 1;
+                                return `<tr><td>${txt}</td><td><input type="text" class="nota-input cvd2" id="CVD2desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td></tr>`;
+                            }).join('')}
+                        </tbody></table></div>`;
+            }
+            area.innerHTML = html;
+        } else {
+            area.innerHTML = `<div id="sub-container-tabelas-conjunto"></div>`;
+        }
+    }
+
+    function adicionarConcorrenteAoConjunto() {
+        const select = document.getElementById("select_conjunto_add");
+        const cod = select.value;
+        if (!cod) { alert("Selecione um concorrente primeiro."); return; }
+        if (concorrentesNoConjuntoAtivo.includes(cod)) { alert("Este concorrente já foi adicionado."); return; }
+
+        const c = bancoCandidatos[cod];
+        const subContainer = document.getElementById("sub-container-tabelas-conjunto");
+        concorrentesNoConjuntoAtivo.push(cod);
+        totalAdicionadosContador++; 
+
+        const classeEstiloBloco = (totalAdicionadosContador % 2 !== 0) ? "bloco-estilo-azul" : "bloco-estilo-verde";
+        let prefixoIdAba = "CC";
+        if (abaAtiva.startsWith("Ritmo") || abaAtiva.startsWith("Retmo")) prefixoIdAba = "RH";
+        else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
+        else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
+
+        let labelIndumentaria = "Desconto Indumentária:";
+        let prefixoId = "CCDC";
+        let listaTextosUsar = TEXTOS_COREOGRAFIA;
+
+        if(abaAtiva.startsWith("Ritmo_Harmonia")) {
+            prefixoId = "RHDC";
+            listaTextosUsar = TEXTOS_RITMO;
+        } else if(abaAtiva.startsWith("Interpretação_Artística")) {
+            prefixoId = "IADC";
+            listaTextosUsar = TEXTOS_INTERPRETACAO;
+        } else if(abaAtiva.startsWith("Criatividade_Variação")) {
+            prefixoId = "CVDC";
+            listaTextosUsar = TEXTOS_CRIATIVIDADE_DC;
+        }
+
+        let tabelaHtml = `
+            <div style="margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 15px;">
+                <label style="font-weight: bold; font-size: 14px; color: #37474f;">Dança Executada no Conjunto:</label>
+                <select id="${prefixoIdAba}dançaconj_${cod}" class="select-conjunto-danca-item" style="padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-weight: bold;">
+                    ${OPCOES_DANCAS_HTML}
+                </select>
+            </div>
+            <table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
+            ${listaTextosUsar.map((txt, index) => {
+                let i = index + 1;
+                let subSeletores = "";
+                
+                if (abaAtiva.startsWith("Ritmo_Harmonia") && i === 1) {
+                    subSeletores = `
+                    <div class="wrapper-sub-seletores">
+                        <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Ritmo não ordenado: Peão"> Peão</label>
+                        <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Ritmo não ordenado: Prenda"> Prenda</label>
+                    </div>`;
+                } else if (abaAtiva.startsWith("Interpretação_Artística")) {
+                    if (i === 1) {
+                        subSeletores = `
+                        <div class="wrapper-sub-seletores">
+                            <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão corporal inadequada: Peão"> Peão</label>
+                            <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão corporal inadequada: Prenda"> Prenda</label>
+                        </div>`;
+                    } else if (i === 2) {
+                        subSeletores = `
+                        <div class="wrapper-sub-seletores">
+                            <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão facial inadequada: Peão"> Peão</label>
+                            <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão facial inadequada: Prenda"> Prenda</label>
+                        </div>`;
+                    }
+                }
+
+                return `<tr>
+                    <td><span>${txt}</span> ${subSeletores}</td>
+                    <td><input type="text" class="nota-input input-desc-conjunto-${cod}" id="${prefixoId}desc0${i}_${cod}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
+                </tr>`;
+            }).join('')}
+        </tbody></table>`;
+
+        let blocoHtml = `
+        <div class="bloco-concorrente-conjunto ${classeEstiloBloco}" id="bloco_conj_${cod}" data-codigo="${cod}">
+            <div class="cabecalho-bloco-titulo">
+                <span>Planilha Coletiva — Código Candidato: ${cod}</span>
+                <button type="button" class="btn-remover-bloco" onclick="removerConcorrenteDoConjunto('${cod}')">Remover</button>
+            </div>
+            
+            <div class="info-group">
+                <div class="field-block"><label>Código:</label><input type="text" value="${cod}" readonly></div>
+                <div class="field-block"><label>Concorrente (Peão e Prenda):</label><input type="text" value="${c.concorrente}" readonly></div>
+                <div class="field-block"><label>Categoria:</label><input type="text" value="${c.categoria}" readonly></div>
+                <div class="field-block"><label>Entidade:</label><input type="text" value="${c.entidade}" readonly></div>
+                <div class="field-block"><label>Município:</label><input type="text" value="${c.municipio}" readonly></div>
+                <div class="field-block"><label>RT:</label><input type="text" value="${c.rt}" readonly></div>
+            </div>
+
+            ${tabelaHtml}
+
+            <div class="info-group" style="grid-template-columns: 1fr 5fr; padding: 15px; margin-bottom: 15px;">
+                <div class="field-block">
+                    <label style="color: var(--danger-color); font-weight: bold;">${labelIndumentaria}</label>
+                    <input type="text" id="desc_indumentaria_${cod}" value="0,00" class="nota-input" oninput="formatarNota(this)" onblur="finalizarNota(this)" style="width:100%; border-color:var(--danger-color); text-align: center;">
+                </div>
+                <div class="field-block">
+                    <label>Observações / Justificativas do Concorrente:</label>
+                    <input type="text" id="obs_campo_${cod}" placeholder="Digite observações exclusivas deste concorrente..." style="width: 100%;">
+                </div>
+            </div>
+
+            <div class="results-box">
+                <div class="results-grid">
+                    <div class="result-item"><span>Nota Conjunto (Bruta)</span><strong id="label-nc_${cod}">4,00</strong></div>
+                    <div class="result-item final-total"><span>NOTA FINAL CONJUNTO (LÍQUIDA)</span><strong id="label-total_${cod}">4,00</strong></div>
+                </div>
+            </div>
+        </div>`;
+
+        subContainer.insertAdjacentHTML('beforeend', blocoHtml);
+        select.value = ""; 
+        atualizarCalculos();
+    }
+
+    function removerConcorrenteDoConjunto(cod) {
+        const bloco = document.getElementById(`bloco_conj_${cod}`);
+        if(bloco) {
+            bloco.remove();
+            concorrentesNoConjuntoAtivo = concorrentesNoConjuntoAtivo.filter(item => item !== cod);
+            atualizarCalculos();
+        }
+    }
+
+    function atualizarCalculos() {
+        if(modoAtivo === "INDIVIDUAL") {
+            let i_desc = obterFloatPorElemento(document.getElementById("desc_indumentaria"));
+            let s1 = 0, s2 = 0;
+            
+            let inputsD1 = document.getElementsByClassName(abaAtiva === "Correção_Coreografica" ? "ccd1" : abaAtiva === "Ritmo_Harmonia" ? "rhd1" : abaAtiva === "Interpretação_Artística" ? "iad1" : "cvd1");
+            let inputsD2 = document.getElementsByClassName(abaAtiva === "Correção_Coreografica" ? "ccd2" : abaAtiva === "Ritmo_Harmonia" ? "rhd2" : abaAtiva === "Interpretação_Artística" ? "iad2" : "cvd2");
+
+            for(let i=0; i<inputsD1.length; i++) s1 += obterFloatPorElemento(inputsD1[i]);
+            for(let i=0; i<inputsD2.length; i++) s2 += obterFloatPorElemento(inputsD2[i]);
+
+            let n1 = Math.max(0, 4.00 - s1);
+            let n2 = Math.max(0, 4.00 - s2);
+            let total = Math.max(0, (n1 + n2) - i_desc);
+
+            document.getElementById("label-n1").innerText = n1.toFixed(2).replace('.', ',');
+            document.getElementById("label-n2").innerText = n2.toFixed(2).replace('.', ',');
+            document.getElementById("label-total").innerText = total.toFixed(2).replace('.', ',');
+        } 
+        else {
+            concorrentesNoConjuntoAtivo.forEach(cod => {
+                let i_desc = obterFloatPorElemento(document.getElementById(`desc_indumentaria_${cod}`));
+                let sc = 0;
+                
+                let inputsBloco = document.getElementsByClassName(`input-desc-conjunto-${cod}`);
+                for(let i=0; i<inputsBloco.length; i++) {
+                    sc += obterFloatPorElemento(inputsBloco[i]);
+                }
+
+                let nc = Math.max(0, 4.00 - sc); 
+                let total = Math.max(0, nc - i_desc);
+
+                document.getElementById(`label-nc_${cod}`).innerText = nc.toFixed(2).replace('.', ',');
+                document.getElementById(`label-total_${cod}`).innerText = total.toFixed(2).replace('.', ',');
+            });
+        } 
+    }
+
+    function enviarDadosParaSheets() {
+    const btn = document.querySelector(".btn-enviar");
+    document.querySelectorAll('.borda-erro').forEach(el => el.classList.remove('borda-erro'));
+
+    if (modoAtivo === "INDIVIDUAL") {
+        const codCandidato = document.getElementById("cod_candidato").value;
+        if (!codCandidato) { alert("Por favor, selecione o número do candidato."); return; }
+        
+        // CORREÇÃO DA SIGLA: Mapeia exatamente a aba ativa para a sigla do ID correto
+        let prefixoIdAba = "CC";
+        if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
+        else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
+        else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
+
+        const danca1Select = document.getElementById(`${prefixoIdAba}dança01`);
+        const danca2Select = document.getElementById(`${prefixoIdAba}dança02`);
+
+        let erroDanca = false;
+        if (danca1Select && !danca1Select.value) {
+            danca1Select.classList.add('borda-erro');
+            erroDanca = true;
+        }
+        if (danca2Select && !danca2Select.value) {
+            danca2Select.classList.add('borda-erro');
+            erroDanca = true;
+        }
+
+        // Bloqueia o envio e foca no seletor vazio
+        if (erroDanca) {
+            alert("Atenção: A dança correspondente não foi escolhida! Por favor, selecione as danças avaliadas nos campos indicados em vermelho.");
+            if (danca1Select && !danca1Select.value) danca1Select.focus();
+            else if (danca2Select && !danca2Select.value) danca2Select.focus();
+            return;
+        }
+
+        if (!confirm("Confirmar envio desta avaliação para a planilha?")) return;
+
+        btn.disabled = true; btn.innerText = "Enviando...";
+
+        let pacoteDados = montarPacoteBase(codCandidato);
+        const todosInputsDesconto = document.querySelectorAll(".nota-input:not(#desc_indumentaria)");
+        todosInputsDesconto.forEach(inp => { if(inp.id) pacoteDados[inp.id] = inp.value || "0,00"; });
+
+        dispararFetchEnvio(pacoteDados, btn);
+    } 
+    else {
+        if (concorrentesNoConjuntoAtivo.length === 0) { alert("Adicione ao menos 1 concorrente ao conjunto antes de enviar."); return; }
+        
+        let prefixoIdAba = "CC";
+        if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
+        else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
+        else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
+
+        let erroConjuntoDanca = false;
+        let primeiroSelectComErro = null;
+
+        for (let i = 0; i < concorrentesNoConjuntoAtivo.length; i++) {
+            let cod = concorrentesNoConjuntoAtivo[i];
+            let selectDanca = document.getElementById(`${prefixoIdAba}dançaconj_${cod}`);
+            if (selectDanca && !selectDanca.value) {
+                selectDanca.classList.add('borda-erro');
+                erroConjuntoDanca = true;
+                if (!primeiroSelectComErro) primeiroSelectComErro = selectDanca;
+            }
+        }
+
+        if (erroConjuntoDanca) {
+            alert("Atenção: Um ou mais concorrentes no bloco coletivo estão sem a dança do conjunto escolhida. Verifique os campos destacados em vermelho.");
+            if (primeiroSelectComErro) primeiroSelectComErro.focus();
+            return;
+        }
+
+        if (!confirm(`Confirmar envio individual simultâneo de ${concorrentesNoConjuntoAtivo.length} concorrente(s)?`)) return;
+
+        btn.disabled = true; btn.innerText = "Enviando...";
+        let promessasEnvio = [];
+
+        concorrentesNoConjuntoAtivo.forEach(cod => {
+            let pacoteDados = montarPacoteBaseConjunto(cod);
+
+            const inputsDesteCod = document.querySelectorAll(`[id$="_${cod}"]`);
+            inputsDesteCod.forEach(inp => {
+                let idLimpo = inp.id.split('_')[0]; 
+                if(idLimpo !== "desc_indumentaria" && idLimpo !== "obs_campo") {
+                    pacoteDados[idLimpo] = inp.value || "0,00";
+                }
+            });
+
+            promessasEnvio.push(
+                fetch(URL_SCRIPT_ENVIO, {
+                    method: 'POST',
+                    mimeType: 'application/json',
+                    body: JSON.stringify(pacoteDados)
+                })
+            );
+        });
+
+        Promise.all(promessasEnvio)
+            .then(() => {
+                btn.disabled = false; btn.innerText = "Enviar Avaliação";
+                alert("Todas as avaliações individuais enviadas com sucesso!");
+                
+                concorrentesNoConjuntoAtivo = [];
+                const subContainer = document.getElementById("sub-container-tabelas-conjunto");
+                if (subContainer) subContainer.innerHTML = "";
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            })
+            .catch(err => {
+                btn.disabled = false; btn.innerText = "Enviar Avaliação";
+                alert("Ocorreu um erro ao salvar um ou mais dados.");
+                console.error(err);
+            });
+    }
+}
+
+    function montarPacoteBase(cod) {
+        const c = bancoCandidatos[cod];
+        let pacote = {
+            "abaAtiva": abaAtiva,
+            "Cod candidato": cod,
+            "Concorrente": c.concorrente,
+            "Categoria": c.categoria,
+            "Entidade": c.entidade,
+            "Municipio": c.municipio,
+            "RT": c.rt,
+            "Avaliador": document.getElementById("avaliador").value,
+            "Data/Hora": document.getElementById("data_hora").value,
+            "Observações": document.getElementById("obs_campo").value,
+            "Nota D1": document.getElementById("label-n1").innerText,
+            "Nota D2": document.getElementById("label-n2").innerText,
+            "Nota Conjunto": "0,00",
+            "NOTA FINAL CRITÉRIO": document.getElementById("label-total").innerText
+        };
+
+        let vIndu = document.getElementById("desc_indumentaria").value;
+        if(abaAtiva.startsWith("Correção_Coreografica")) pacote["descCC.INDU"] = vIndu;
+        else if(abaAtiva.startsWith("Ritmo_Harmonia")) pacote["descRH.INDU"] = vIndu;
+        else if(abaAtiva.startsWith("Interpretação_Artística")) pacote["descIA.INDU"] = vIndu;
+        else if(abaAtiva.startsWith("Criatividade_Variação")) pacote["descCV.INDU"] = vIndu;
+
+        if(document.getElementById("CCdança01")) pacote["CCdança01"] = document.getElementById("CCdança01").value;
+        if(document.getElementById("CCdança02")) pacote["CCdança02"] = document.getElementById("CCdança02").value;
+        if(document.getElementById("RHdança01")) pacote["RHdança01"] = document.getElementById("RHdança01").value;
+        if(document.getElementById("RHdança02")) pacote["RHdança02"] = document.getElementById("RHdança02").value;
+        if(document.getElementById("IAdança01")) pacote["IAdança01"] = document.getElementById("IAdança01").value;
+        if(document.getElementById("IAdança02")) pacote["IAdança02"] = document.getElementById("IAdança02").value;
+        if(document.getElementById("CVdança01")) pacote["CVdança01"] = document.getElementById("CVdança01").value;
+        if(document.getElementById("CVdança02")) pacote["CVdança02"] = document.getElementById("CVdança02").value;
+
+        return pacote;
+    }
+
+    function montarPacoteBaseConjunto(cod) {
+        const c = bancoCandidatos[cod];
+        let pfx = "CC";
+        if (abaAtiva.startsWith("Ritmo") || abaAtiva.startsWith("Retmo")) pfx = "RH";
+        else if (abaAtiva.startsWith("Interpretação")) pfx = "IA";
+        else if (abaAtiva.startsWith("Criatividade")) pfx = "CV";
+        
+        let pacote = {
+            "abaAtiva": abaAtiva,
+            "Cod candidato": cod,
+            "Concorrente": c.concorrente,
+            "Categoria": c.categoria,
+            "Entidade": c.entidade,
+            "Municipio": c.municipio,
+            "RT": c.rt,
+            "Avaliador": document.getElementById("avaliador").value,
+            "Data/Hora": document.getElementById("data_hora").value,
+            "Observações": document.getElementById(`obs_campo_${cod}`).value,
+            "Nota D1": "0,00",
+            "Nota D2": "0,00",
+            "Nota Conjunto": document.getElementById(`label-nc_${cod}`).innerText,
+            "NOTA FINAL CRITÉRIO": document.getElementById(`label-total_${cod}`).innerText
+        };
+
+        let campoDançaConjunto = document.getElementById(`${pfx}dançaconj_${cod}`);
+        if(campoDançaConjunto) {
+            pacote[`${pfx}dança01`] = campoDançaConjunto.value; 
+        }
+
+        let vIndu = document.getElementById(`desc_indumentaria_${cod}`).value;
+        if(abaAtiva.startsWith("Correção_Coreografica")) pacote["descCC.INDU"] = vIndu;
+        else if(abaAtiva.startsWith("Ritmo_Harmonia")) pacote["descRH.INDU"] = vIndu;
+        else if(abaAtiva.startsWith("Interpretação_Artística")) pacote["descIA.INDU"] = vIndu;
+        else if(abaAtiva.startsWith("Criatividade_Variação")) pacote["descCV.INDU"] = vIndu;
+
+        return pacote;
+    }
+
+    function dispararFetchEnvio(pacote, elementoBotao) {
+        fetch(URL_SCRIPT_ENVIO, {
+            method: 'POST',
+            mimeType: 'application/json',
+            body: JSON.stringify(pacote)
+        })
+        .then(() => {
+            elementoBotao.disabled = false; elementoBotao.innerText = "Enviar Avaliação";
+            alert("Avaliação enviada com sucesso para a Planilha!");
+            
+            // MODIFICAÇÃO SOLICITADA: Invoca a limpeza completa e desmarcação dos checkboxes pós-envio
+            limparFormularioAposEnvio();
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch(err => {
+            elementoBotao.disabled = false; elementoBotao.innerText = "Enviar Avaliação";
+            alert("Erro ao salvar dados na Planilha.");
+            console.error(err);
+        });
+    }
+</script>
+
+</body>
+</html>
