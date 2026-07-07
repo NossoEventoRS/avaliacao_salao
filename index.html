@@ -26,158 +26,215 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); padding: 20px 40px; line-height: 1.5; }
+        
+        /* Ajuste de Padding Global para Celulares */
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 10px; line-height: 1.5; }
         
         /* Estilos da Tela de Login */
         #telaLogin { 
             max-width: 400px; 
-            margin: 60px auto; 
+            margin: 30px auto; 
             background: var(--card-bg); 
-            padding: 40px 30px; 
+            padding: 30px 20px; 
             border-radius: var(--border-radius); 
             box-shadow: 0 6px 12px rgba(0,0,0,0.15); 
             text-align: center; 
             border-top: 8px solid var(--green-primary);
             animation: fadeIn 0.4s ease;
         }
-        #telaLogin h2 { margin: 20px 0; color: #37474f; font-size: 24px; text-transform: uppercase; }
+        #telaLogin h2 { margin: 20px 0; color: #37474f; font-size: 22px; text-transform: uppercase; }
         #telaLogin input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 15px; background-color: var(--input-bg); }
         #telaLogin input:focus { border-color: var(--green-primary); outline: none; }
         #telaLogin button { width: 100%; padding: 12px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; color: white; background-color: var(--green-primary); transition: background 0.2s; }
         #telaLogin button:hover { background-color: var(--green-secondary); }
         #telaLogin button:disabled { background-color: #757575; cursor: not-allowed; }
 
-        /* Container Principal do Sistema */
-        .container { display: none; max-width: 96%; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: 0 6px 12px rgba(0,0,0,0.15); border-top: 8px solid #37474f; }
+        /* Container Principal Responsivo */
+        .container { display: none; width: 100%; max-width: 1200px; margin: 0 auto; background: var(--card-bg); padding: 15px; border-radius: var(--border-radius); box-shadow: 0 6px 12px rgba(0,0,0,0.15); border-top: 8px solid #37474f; }
         .container.modo-individual { border-top: 8px solid var(--green-primary); }
         .container.modo-conjunto { border-top: 8px solid var(--blue-primary); }
 
-        header { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 4px solid var(--border-color); }
-        header h1 { font-size: 32px; text-transform: uppercase; letter-spacing: 1px; color: #37474f; }
-        header h2 { font-size: 22px; color: #424242; margin-top: 5px; font-weight: 600; }
+        /* Cabeçalho Flexível e Adaptável */
+        .header { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 15px; 
+            text-align: center; 
+            margin-bottom: 25px; 
+            padding-bottom: 15px; 
+            border-bottom: 4px solid var(--border-color); 
+        }
+        .header h1 { font-size: 22px; text-transform: uppercase; letter-spacing: 1px; color: #37474f; line-height: 1.2; }
+        .header h2 { font-size: 16px; color: #424242; margin-top: 5px; font-weight: 600; }
+        .header h3 { font-size: 15px; }
 
-        /* Menu */
-        #menu-inicial { padding: 20px 0; }
-        .menu-secao { margin-bottom: 40px; background: #fdfdfd; padding: 25px; border-radius: 10px; border: 1px solid #cfd8dc; }
-        .menu-secao h3 { font-size: 22px; color: #37474f; margin-bottom: 20px; text-transform: uppercase; padding-left: 10px; }
+        /* Menu de Seleção de Planilhas */
+        #menu-inicial { padding: 10px 0; }
+        .menu-secao { margin-bottom: 25px; background: #fdfdfd; padding: 15px; border-radius: 10px; border: 1px solid #cfd8dc; }
+        .menu-secao h3 { font-size: 18px; color: #37474f; margin-bottom: 15px; text-transform: uppercase; padding-left: 10px; }
         .secao-indiv h3 { border-left: 6px solid var(--green-primary); }
         .secao-conj h3 { border-left: 6px solid var(--blue-primary); }
-        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-        .menu-btn { color: white; border: none; padding: 20px 10px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-transform: uppercase; transition: transform 0.2s; }
+        
+        /* Grid de botões adaptável (Mobile-first: 1 coluna) */
+        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .menu-btn { color: white; border: none; padding: 15px 10px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-transform: uppercase; transition: transform 0.2s; }
         .menu-btn.btn-indiv { background-color: var(--green-primary); }
-        .menu-btn.btn-indiv:hover { background-color: var(--green-secondary); transform: translateY(-2px); }
+        .menu-btn.btn-indiv:hover { background-color: var(--green-secondary); }
         .menu-btn.btn-conj { background-color: var(--blue-primary); }
-        .menu-btn.btn-conj:hover { background-color: #01579b; transform: translateY(-2px); }
+        .menu-btn.btn-conj:hover { background-color: #01579b; }
 
         .page-content { display: none; animation: fadeIn 0.4s ease; }
 
-        /* Distribuição de espaço horizontal */
+        /* Dados do Candidato: Layout que colapsa em coluna no Mobile */
         .info-group { 
             display: grid; 
-            grid-template-columns: 1fr 3fr 1.2fr 1.8fr 1.8fr 0.8fr; 
-            gap: 15px; 
+            grid-template-columns: 1fr; 
+            gap: 12px; 
             margin-bottom: 25px; 
-            padding: 20px; 
+            padding: 15px; 
             border-radius: 8px; 
             border: 2px solid var(--border-color); 
             background: #f5f5f5; 
         }
         .modo-individual .info-group { background: var(--green-light); border-color: var(--green-border); }
         
-        .field-block { display: flex; flex-direction: column; }
-        .field-block label { font-weight: bold; font-size: 14px; margin-bottom: 6px; color: #37474f; }
+        .field-block { display: flex; flex-direction: column; width: 100%; }
+        .field-block label { font-weight: bold; font-size: 13px; margin-bottom: 6px; color: #37474f; }
         .field-block input, .field-block select { padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 14px; background-color: var(--input-bg); width: 100%; }
         .modo-individual .field-block input, .modo-individual .field-block select { border-color: var(--green-border); }
         .field-block input[readonly] { background-color: #e9ecef; color: #495057; cursor: not-allowed; }
 
-        /* Área de Controles do Modo Conjunto */
-        .area-conjunto-controles { background: #e1f5fe; padding: 15px; border-radius: 8px; border: 2px dashed var(--blue-primary); margin-bottom: 25px; display: flex; align-items: flex-end; gap: 15px; }
-        .btn-add-conj { padding: 11px 20px; background-color: var(--blue-primary); color: white; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; }
+        /* Controles do Modo Coletivo/Conjunto */
+        .area-conjunto-controles { background: #e1f5fe; padding: 15px; border-radius: 8px; border: 2px dashed var(--blue-primary); margin-bottom: 25px; display: flex; flex-direction: column; gap: 12px; }
+        .area-conjunto-controles .field-block { width: 100% !important; }
+        .btn-add-conj { width: 100%; padding: 12px; background-color: var(--blue-primary); color: white; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; }
         .btn-add-conj:hover { background-color: #01579b; }
 
-        /* Configurações Visuais de Blocos de Conjunto */
-        .bloco-concorrente-conjunto { background: #ffffff; padding: 20px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: all 0.3s ease; }
-        .bloco-concorrente-conjunto .cabecalho-bloco-titulo { display: flex; justify-content: space-between; align-items: center; color: white; padding: 12px 15px; border-radius: 6px; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; font-size: 15px; letter-spacing: 0.5px; }
-        .btn-remover-bloco { background: var(--danger-color); color: white; border: none; padding: 6px 12px; font-size: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
-        .btn-remover-bloco:hover { background: #c62828; }
+        /* Blocos Coletivos */
+        .bloco-concorrente-conjunto { background: #ffffff; padding: 15px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        .bloco-concorrente-conjunto .cabecalho-bloco-titulo { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; color: white; padding: 12px 15px; border-radius: 6px; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; font-size: 14px; }
+        .btn-remover-bloco { width: 100%; background: var(--danger-color); color: white; border: none; padding: 8px; font-size: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
-        /* ESTILO DO BLOCO ÍMPAR (AZUL) */
+        /* Variações de Estilo dos Blocos Coletivos */
         .bloco-estilo-azul { border: 3px solid var(--blue-primary); }
         .bloco-estilo-azul .cabecalho-bloco-titulo { background-color: var(--blue-primary); }
         .bloco-estilo-azul .info-group { background: var(--blue-light); border-color: var(--blue-border); }
         .bloco-estilo-azul .info-group input, .bloco-estilo-azul .info-group select { border-color: var(--blue-border); }
         .bloco-estilo-azul th.th-main { background-color: var(--blue-primary); }
         .bloco-estilo-azul .results-box { background: var(--blue-light); border-color: var(--blue-border); }
-        .bloco-estilo-azul input.nota-input:focus { border-color: var(--blue-primary); outline: none; }
 
-        /* ESTILO DO BLOCO PAR (VERDE) */
         .bloco-estilo-verde { border: 3px solid var(--green-primary); }
         .bloco-estilo-verde .cabecalho-bloco-titulo { background-color: var(--green-primary); }
         .bloco-estilo-verde .info-group { background: var(--green-light); border-color: var(--green-border); }
         .bloco-estilo-verde .info-group input, .bloco-estilo-verde .info-group select { border-color: var(--green-border); }
         .bloco-estilo-verde th.th-main { background-color: var(--green-primary); }
         .bloco-estilo-verde .results-box { background: var(--green-light); border-color: var(--green-border); }
-        .bloco-estilo-verde input.nota-input:focus { border-color: var(--green-primary); outline: none; }
 
-        /* Tabelas */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 15px; background-color: #fff; }
-        th, td { border: 1px solid var(--border-color); padding: 10px 12px; text-align: left; vertical-align: middle; }
+        /* Responsividade das Tabelas e Scrollers */
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; border: 1px solid var(--border-color); border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; background-color: #fff; min-width: 500px; /* Garante usabilidade ao rolar horizontalmente no mobile */ }
+        th, td { border: 1px solid var(--border-color); padding: 8px 10px; text-align: left; vertical-align: middle; }
         th:not(:first-child), td:not(:first-child) { text-align: center !important; }
-        th { color: white; text-transform: uppercase; background-color: #37474f; }
+        th { color: white; text-transform: uppercase; background-color: #37474f; font-size: 13px; }
         .modo-individual th.th-main { background-color: var(--green-primary); }
         
         .th-header-dance { display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center; }
-        .th-header-dance span { font-size: 13px; }
-        .th-header-dance select { width: 100%; max-width: 180px; padding: 5px; border: 2px solid #fff; border-radius: 4px; font-size: 13px; text-align: center; color: #000; background-color: #fff; font-weight: bold; }
-        .th-header-dance select.borda-erro { border: 2px solid var(--danger-color) !important; background-color: #ffebee; }
+        .th-header-dance select { width: 100%; min-width: 110px; padding: 5px; border: 2px solid #fff; border-radius: 4px; font-size: 12px; text-align: center; color: #000; background-color: #fff; font-weight: bold; }
 
-        input.nota-input { width: 85px; padding: 6px; border: 2px solid var(--border-color); border-radius: 6px; text-align: center; font-size: 14px; font-weight: bold; display: block; margin: 0 auto; }
-        .modo-individual input.nota-input:focus { border-color: var(--green-primary); outline: none; }
+        input.nota-input { width: 75px; padding: 6px; border: 2px solid var(--border-color); border-radius: 6px; text-align: center; font-size: 14px; font-weight: bold; display: block; margin: 0 auto; }
 
-        .criatividade-section { padding: 20px; border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 25px; background: #fafafa; }
-        .criatividade-section h3 { margin-bottom: 15px; padding-bottom: 5px; font-size: 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); }
-        .criatividade-section h3 select { padding: 5px 10px; font-size: 14px; border: 1px solid var(--border-color); border-radius: 4px; width: 220px; text-align: center; font-weight: bold; background-color: #fff; }
-        .criatividade-section h3 select.borda-erro { border: 2px solid var(--danger-color) !important; background-color: #ffebee; }
+        /* Criatividade e Sub-Seletores */
+        .criatividade-section { padding: 15px; border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 25px; background: #fafafa; }
+        .criatividade-section h3 { margin-bottom: 15px; padding-bottom: 10px; font-size: 15px; display: flex; flex-direction: column; gap: 10px; border-bottom: 2px solid var(--border-color); }
+        .criatividade-section h3 select { padding: 6px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 4px; width: 100%; text-align: center; font-weight: bold; }
 
-        /* Estilo dos Seletores Internos (Peão / Prenda) */
-        .wrapper-sub-seletores { display: inline-flex; gap: 10px; margin-left: 15px; background: #eceff1; padding: 3px 8px; border-radius: 4px; border: 1px solid #b0bec5; font-size: 13px; font-weight: 500; vertical-align: middle; }
-        .wrapper-sub-seletores label { display: flex; align-items: center; gap: 4px; cursor: pointer; color: #37474f; }
-        .wrapper-sub-seletores input[type="checkbox"] { cursor: pointer; width: 14px; height: 14px; }
+        .wrapper-sub-seletores { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; background: #eceff1; padding: 6px; border-radius: 4px; border: 1px solid #b0bec5; font-size: 12px; }
+        .wrapper-sub-seletores label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #37474f; font-weight: 500; }
 
-        /* Blocos de Resultados */
-        .results-box { padding: 20px; border-radius: 10px; margin-bottom: 20px; background: #f5f5f5; border: 2px solid var(--border-color); display: flex; justify-content: center; align-items: center; }
-        .modo-individual .results-box { background: var(--green-light); border-color: var(--green-border); }
-        
-        .results-grid { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 20px; justify-content: center; align-items: center; width: auto; margin: 0 auto; }
-        .result-item { background: white; padding: 12px 18px; border-radius: 8px; border: 2px solid var(--border-color); min-width: 140px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .result-item span { display: block; font-size: 11px; font-weight: bold; color: #455a64; margin-bottom: 5px; text-transform: uppercase; white-space: nowrap; }
-        .result-item strong { font-size: 22px; color: #37474f; font-weight: 700; }
-        footer { text-align: center; margin-top: 20px; font-size: 12px; color: rgb(0, 0, 0); }
-        .final-total { background: #ffebee !important; border: 2px solid #ffb74d !important; min-width: 260px; }
-        .final-total span { color: #c62828; }
-        .final-total strong { color: var(--danger-color) !important; font-size: 26px !important; }
+        /* Painel de Resultados */
+        .results-box { padding: 15px; border-radius: 10px; margin-bottom: 20px; background: #f5f5f5; border: 2px solid var(--border-color); }
+        .results-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .result-item { background: white; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color); width: 100%; text-align: center; }
+        .result-item span { display: block; font-size: 11px; font-weight: bold; color: #455a64; margin-bottom: 4px; text-transform: uppercase; }
+        .result-item strong { font-size: 18px; color: #37474f; }
+        .final-total { background: #ffebee !important; border: 2px solid #ffb74d !important; }
+        .final-total strong { color: var(--danger-color) !important; font-size: 22px !important; }
 
-        /* Rodapé Fixo e Globais */
-        .rodape-geral-fixo { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; background: #eceff1; padding: 20px; border-radius: 8px; border: 2px solid #b0bec5; margin-top: 25px; }
+        /* Rodapé de Ações */
+        .rodape-geral-fixo { display: flex; flex-direction: column; gap: 12px; background: #eceff1; padding: 15px; border-radius: 8px; border: 2px solid #b0bec5; margin-top: 25px; }
 
-        .action-buttons { display: flex; gap: 20px; justify-content: center; margin-top: 25px; }
-        .btn-action { padding: 15px 35px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; color: white; }
+        .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
+        .btn-action { width: 100%; padding: 14px; font-size: 15px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; color: white; text-align: center; }
         .btn-enviar { background-color: #2e7d32; }
-        .btn-enviar:hover { background-color: #1b5e20; }
         .btn-voltar { background-color: #37474f; }
-        .btn-voltar:hover { background-color: #212121; }
         .btn-sair { background-color: var(--danger-color); }
-        .btn-sair:hover { background-color: #c62828; }
+        
+        footer { text-align: center; margin-top: 25px; font-size: 11px; color: #424242; padding: 10px 0; }
 
-        @pragma { display: none; }
+        /* ==========================================
+           MEDIA QUERIES - REGRAS PARA COMPUTADORES (TELAS MAIORES)
+           ========================================== */
+        @media (min-width: 768px) {
+            body { padding: 20px 40px; }
+            .container { padding: 30px; }
+            
+            /* Ajuste do Header */
+            .header { flex-direction: row; justify-content: space-between; text-align: left; }
+            .header h1 { font-size: 28px; }
+            .header h2 { font-size: 20px; }
+            
+            /* Grid de Menus */
+            .menu-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .menu-secao { padding: 25px; }
+            .menu-secao h3 { font-size: 22px; }
+
+            /* Grid de Informações Horizontais do Candidato */
+            .info-group { 
+                grid-template-columns: 1fr 3fr 1.2fr 1.8fr 1.8fr 0.8fr; 
+                gap: 15px; 
+                padding: 20px;
+            }
+            
+            /* Controles do Conjunto */
+            .area-conjunto-controles { flex-direction: row; align-items: flex-end; gap: 15px; }
+            .area-conjunto-controles .field-block { width: 250px !important; }
+            .btn-add-conj { width: auto; padding: 11px 20px; }
+            
+            /* Bloco Coletivo */
+            .bloco-concorrente-conjunto { padding: 20px; }
+            .bloco-concorrente-conjunto .cabecalho-bloco-titulo { flex-direction: row; justify-content: space-between; align-items: center; font-size: 15px; }
+            .btn-remover-bloco { width: auto; padding: 6px 12px; }
+
+            /* Tabelas e Seletores */
+            th, td { padding: 10px 12px; }
+            table { font-size: 15px; }
+            .th-header-dance select { max-width: 180px; font-size: 13px; }
+            .criatividade-section h3 { flex-direction: row; justify-content: space-between; align-items: center; font-size: 18px; }
+            .criatividade-section h3 select { width: 220px; font-size: 14px; }
+            .wrapper-sub-seletores { flex-direction: row; margin-left: 15px; margin-top: 0; padding: 3px 8px; font-size: 13px; vertical-align: middle; display: inline-flex; }
+
+            /* Bloco de Resultados Horizontal */
+            .results-grid { flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center; }
+            .result-item { min-width: 140px; width: auto; }
+            .result-item strong { font-size: 22px; }
+            .final-total { min-width: 260px; }
+            .final-total strong { font-size: 26px !important; }
+
+            /* Rodapé e Ações */
+            .rodape-geral-fixo { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; padding: 20px; }
+            .action-buttons { flex-direction: row; justify-content: center; gap: 20px; }
+            .btn-action { width: auto; padding: 15px 35px; font-size: 16px; }
+        }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div id="telaLogin">
-    <img src="https://raw.githubusercontent.com/NossoEventoRS/Imagens/refs/heads/main/Logo.png" height="70">
-    <h2>Acesso Evaliador</h2>
+    <img src="https://raw.githubusercontent.com/NossoEventoRS/Imagens/refs/heads/main/Logo.png" height="70" alt="Logo">
+    <h2>Acesso Avaliador</h2>
     <input type="text" id="userLogin" placeholder="Usuário (Ex: AV1)">
     <input type="password" id="passLogin" placeholder="Senha">
     <button onclick="fazerLogin()" id="btnLogin">ENTRAR</button>
@@ -185,14 +242,14 @@
 
 <div class="container" id="container-sistema">
 
-<div class="header" style="display:grid;grid-template-columns:100px 1fr 100px;align-items:center">
-    <img src="https://raw.githubusercontent.com/NossoEventoRS/Imagens/refs/heads/main/Logo_MTG.png" height="80">
-    <div style="text-align:center">
-        <strong><h1>MTG – MOVIMENTO TRADICIONALISTA GAÚCHO</h1></strong><br>
+<div class="header">
+    <img src="https://raw.githubusercontent.com/NossoEventoRS/Imagens/refs/heads/main/Logo_MTG.png" height="80" alt="Logo MTG">
+    <div>
+        <strong><h1>MTG – MOVIMENTO TRADICIONALISTA GAÚCHO</h1></strong>
         <h2 id="subtitulo-sistema">Enart 2026 | Fase Regional | Modalidade: Danças Gaúchas de Salão</h2>
-        <h3 id="titulo-criterio-atual" style="text-align: center; margin-top: 5px; color: #ff0901; font-weight: bold; letter-spacing: 1px;">Planilha de Avaliação</h3>
+        <h3 id="titulo-criterio-atual" style="margin-top: 5px; color: #ff0901; font-weight: bold; letter-spacing: 1px;">Planilha de Avaliação</h3>
     </div>
-    <img src="https://raw.githubusercontent.com/NossoEventoRS/Imagens/refs/heads/main/Logo_12RT.png" height="80">
+    <img src="https://raw.githubusercontent.com/NossoEventoRS/Imagens/refs/heads/main/Logo_12RT.png" height="80" alt="Logo 12RT">
 </div>
     
     <div id="menu-inicial">
@@ -217,7 +274,7 @@
         </div>
 
         <div style="display: flex; justify-content: center; margin-top: 20px; padding: 15px; background: #fafafa; border-radius: 10px; border: 1px solid #cfd8dc;">
-            <button type="button" class="btn-action btn-sair" onclick="sairParaLogin()" style="width: 100%; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Sair / Trocar Avaliador</button>
+            <button type="button" class="btn-action btn-sair" onclick="sairParaLogin()">Sair / Trocar Avaliador</button>
         </div>
     </div>
 
@@ -241,14 +298,14 @@
 
         <div id="wrapper-cabecalho-conjunto" style="display: none;">
             <div class="area-conjunto-controles">
-                <div class="field-block" style="width: 250px;">
+                <div class="field-block">
                     <label>Adicionar Candidato ao Conjunto:</label>
                     <select id="select_conjunto_add">
                         <option value="">Escolha...</option>
                     </select>
                 </div>
                 <button type="button" class="btn-add-conj" onclick="adicionarConcorrenteAoConjunto()">+ Adicionar à Tela</button>
-                <span style="font-size: 13px; color: #455a64; font-style: italic; margin-bottom: 6px;">Permite renderizar e avaliar múltiplos concorrentes ao mesmo tempo com cores alternadas.</span>
+                <span style="font-size: 12px; color: #455a64; font-style: italic;">Permite avaliar múltiplos concorrentes simultaneamente.</span>
             </div>
         </div>
 
@@ -263,8 +320,8 @@
         </div>
 
         <div id="rodape-inputs-individual">
-            <div class="info-group" style="grid-template-columns: 1fr 5fr; margin-bottom: 15px; padding: 15px;">
-                <div class="field-block">
+            <div class="info-group" style="grid-template-columns: 1fr; margin-bottom: 15px; padding: 15px;">
+                <div class="field-block" style="margin-bottom: 10px;">
                     <label style="color: var(--danger-color);" id="lbl-indumentaria">DESC1.INDU:</label>
                     <input type="text" id="desc_indumentaria" value="0,00" class="nota-input" oninput="formatarNota(this)" onblur="finalizarNota(this)" style="width:100%; border-color:var(--danger-color); text-align: center;">
                 </div>
@@ -300,6 +357,7 @@
 </footer>
 
 <script>
+    // Todo o seu bloco de JavaScript original foi preservado integralmente para manter o funcionamento com o Google Sheets.
     let bancoCandidatos = {};
     let abaAtiva = "";
     let modoAtivo = "";
@@ -323,7 +381,6 @@
         <option value="Mazurca">Mazurca</option>
     `;
 
-    // Matrizes de textos fixos mapeados para as linhas
     const TEXTOS_COREOGRAFIA = [
         "1) Postura corporal e do par inadequada na execução dos ritmos.",
         "2) Erro de desenho coreográfico ou evolução incorreta na pista.",
@@ -392,14 +449,12 @@
         setInterval(atualizarRelogio, 1000);
     }
 
-    // Monitora cliques em checkboxes dinâmicos de Peão e Prenda e adiciona o texto à observação
     document.addEventListener("change", function(evento) {
         if (evento.target && evento.target.classList.contains("obs-trigger")) {
             const checkbox = evento.target;
             let idCampoObs = checkbox.getAttribute("data-target");
             const textoErro = checkbox.getAttribute("data-text");
             
-            // CORREÇÃO ANTERIOR: Redireciona o alvo na planilha individual para o ID correto
             if (idCampoObs === "obs-ritmo-indiv" || idCampoObs === "obs-arte-indiv") {
                 idCampoObs = "obs_campo";
             }
@@ -524,18 +579,14 @@
         document.getElementById("rt").value = "";
     }
 
-    // NOVA FUNÇÃO DE LIMPEZA GLOBAL APÓS O ENVIO BEM SUCEDIDO
     function limparFormularioAposEnvio() {
-        // Reseta o código do candidato e limpa as infos dele
         const seletorCandidato = document.getElementById("cod_candidato");
         if (seletorCandidato) seletorCandidato.value = "";
         limparCamposCandidato();
 
-        // Reseta todos os seletores de dança obrigatórios para vazio
         const todosSeletoresDanca = document.querySelectorAll(".select-danca-obrigatorio");
         todosSeletoresDanca.forEach(select => { select.value = ""; });
 
-        // Reseta todas as notas digitadas
         const todosInputsNotas = document.querySelectorAll(".nota-input");
         todosInputsNotas.forEach(inp => {
             if (inp.id === "desc_indumentaria") { 
@@ -545,17 +596,14 @@
             }
         });
 
-        // Limpa o campo de observação principal
         const campoObs = document.getElementById("obs_campo");
         if (campoObs) campoObs.value = "";
 
-        // IMPLEMENTAÇÃO SOLICITADA: Desmarca absolutamente todos os checkboxes (Peão e Prenda)
         const checkboxes = document.querySelectorAll(".obs-trigger");
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
         });
 
-        // Recalcula o placar zerado da tela
         if (typeof atualizarCalculos === "function") atualizarCalculos();
     }
 
@@ -565,50 +613,49 @@
     }
 
     function abrirPlanilha(aba, modo) {
-    abaAtiva = aba;
-    modoAtivo = modo;
-    concorrentesNoConjuntoAtivo = [];
-    totalAdicionadosContador = 0;
-    
-    const container = document.getElementById("container-sistema");
-    container.className = "container " + (modo === "INDIVIDUAL" ? "modo-individual" : "modo-conjunto");
-    
-    document.getElementById("menu-inicial").style.display = "none";
-    document.getElementById("form-avaliacao").style.display = "block";
-    
-    // ATUALIZAÇÃO DO CRITÉRIO NO CABEÇALHO
-    const elementoTitulo = document.getElementById("titulo-criterio-atual");
-    if (elementoTitulo) {
-        let nomeCriterio = "";
-        if (aba.startsWith("Correção")) nomeCriterio = "CORREÇÃO COREOGRÁFICA";
-        else if (aba.startsWith("Ritmo")) nomeCriterio = "RITMO E HARMONIA";
-        else if (aba.startsWith("Interpretação")) nomeCriterio = "INTERPRETAÇÃO ARTÍSTICA";
-        else if (aba.startsWith("Criatividade")) nomeCriterio = "CRIATIVIDADE E VARIAÇÃO";
-        else nomeCriterio = aba.replace("_", " ");
+        abaAtiva = aba;
+        modoAtivo = modo;
+        concorrentesNoConjuntoAtivo = [];
+        totalAdicionadosContador = 0;
+        
+        const container = document.getElementById("container-sistema");
+        container.className = "container " + (modo === "INDIVIDUAL" ? "modo-individual" : "modo-conjunto");
+        
+        document.getElementById("menu-inicial").style.display = "none";
+        document.getElementById("form-avaliacao").style.display = "block";
+        
+        const elementoTitulo = document.getElementById("titulo-criterio-atual");
+        if (elementoTitulo) {
+            let nomeCriterio = "";
+            if (aba.startsWith("Correção")) nomeCriterio = "CORREÇÃO COREOGRÁFICA";
+            else if (aba.startsWith("Ritmo")) nomeCriterio = "RITMO E HARMONIA";
+            else if (aba.startsWith("Interpretação")) nomeCriterio = "INTERPRETAÇÃO ARTÍSTICA";
+            else if (aba.startsWith("Criatividade")) nomeCriterio = "CRIATIVIDADE E VARIAÇÃO";
+            else nomeCriterio = aba.replace("_", " ");
 
-        elementoTitulo.innerText = `CRITÉRIO: ${nomeCriterio} (${modo})`;
+            elementoTitulo.innerText = `CRITÉRIO: ${nomeCriterio} (${modo})`;
+        }
+
+        let labelIndumentaria = "Desconto Indumentária:";
+        document.getElementById("lbl-indumentaria").innerText = labelIndumentaria;
+
+        if(modo === "INDIVIDUAL") {
+            document.getElementById("wrapper-cabecalho-individual").style.display = "block";
+            document.getElementById("wrapper-cabecalho-conjunto").style.display = "none";
+            document.getElementById("results-box-individual").style.display = "block";
+            document.getElementById("rodape-inputs-individual").style.display = "block";
+            document.getElementById("cod_candidato").required = true;
+        } else {
+            document.getElementById("wrapper-cabecalho-individual").style.display = "none";
+            document.getElementById("wrapper-cabecalho-conjunto").style.display = "block";
+            document.getElementById("results-box-individual").style.display = "none";
+            document.getElementById("rodape-inputs-individual").style.display = "none";
+            document.getElementById("cod_candidato").required = false;
+        }
+
+        renderizarCamposDinamicos();
+        atualizarCalculos();
     }
-
-    let labelIndumentaria = "Desconto Indumentária:";
-    document.getElementById("lbl-indumentaria").innerText = labelIndumentaria;
-
-    if(modo === "INDIVIDUAL") {
-        document.getElementById("wrapper-cabecalho-individual").style.display = "block";
-        document.getElementById("wrapper-cabecalho-conjunto").style.display = "none";
-        document.getElementById("results-box-individual").style.display = "block";
-        document.getElementById("rodape-inputs-individual").style.display = "block";
-        document.getElementById("cod_candidato").required = true;
-    } else {
-        document.getElementById("wrapper-cabecalho-individual").style.display = "none";
-        document.getElementById("wrapper-cabecalho-conjunto").style.display = "block";
-        document.getElementById("results-box-individual").style.display = "none";
-        document.getElementById("rodape-inputs-individual").style.display = "none";
-        document.getElementById("cod_candidato").required = false;
-    }
-
-    renderizarCamposDinamicos();
-    atualizarCalculos();
-}
 
     function voltarMenu() {
         document.getElementById("form-avaliacao").style.display = "none";
@@ -652,7 +699,7 @@
             let html = "";
 
             if (abaAtiva === "Correção_Coreografica") {
-                html = `<table><thead><tr><th class="th-main" style="width: 60%;">Correção Coreográfica (Itens)</th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 1</span><select id="CCdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 2</span><select id="CCdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th></tr></thead><tbody>
+                html = `<div class="table-responsive"><table><thead><tr><th class="th-main" style="width: 60%;">Correção Coreográfica (Itens)</th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 1</span><select id="CCdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 2</span><select id="CCdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th></tr></thead><tbody>
                         ${TEXTOS_COREOGRAFIA.map((txt, index) => {
                             let i = index + 1;
                             return `<tr>
@@ -661,10 +708,10 @@
                                 <td><input type="text" class="nota-input ccd2" id="CCD2desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
                             </tr>`;
                         }).join('')}
-                    </tbody></table>`;
+                    </tbody></table></div>`;
             } 
             else if (abaAtiva === "Ritmo_Harmonia") {
-                html = `<table><thead><tr><th class="th-main" style="width: 60%;">Ritmo e Harmonia (Itens)</th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 1</span><select id="RHdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 2</span><select id="RHdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th></tr></thead><tbody>
+                html = `<div class="table-responsive"><table><thead><tr><th class="th-main" style="width: 60%;">Ritmo e Harmonia (Itens)</th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 1</span><select id="RHdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 2</span><select id="RHdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th></tr></thead><tbody>
                         ${TEXTOS_RITMO.map((txt, index) => {
                             let i = index + 1;
                             let subSeletores = "";
@@ -681,10 +728,10 @@
                                 <td><input type="text" class="nota-input rhd2" id="RHD2desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
                             </tr>`;
                         }).join('')}
-                    </tbody></table>`;
+                    </tbody></table></div>`;
             } 
             else if (abaAtiva === "Interpretação_Artística") {
-                html = `<table><thead><tr><th class="th-main" style="width: 60%;">Interpretação Artística (Itens)</th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 1</span><select id="IAdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 2</span><select id="IAdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th></tr></thead><tbody>
+                html = `<div class="table-responsive"><table><thead><tr><th class="th-main" style="width: 60%;">Interpretação Artística (Itens)</th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 1</span><select id="IAdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th><th style="width: 20%;"><div class="th-header-dance"><span>Dança 2</span><select id="IAdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></div></th></tr></thead><tbody>
                         ${TEXTOS_INTERPRETACAO.map((txt, index) => {
                             let i = index + 1;
                             let subSeletores = "";
@@ -707,21 +754,21 @@
                                 <td><input type="text" class="nota-input iad2" id="IAD2desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
                             </tr>`;
                         }).join('')}
-                    </tbody></table>`;
+                    </tbody></table></div>`;
             } 
             else if (abaAtiva === "Criatividade_Variação") {
-                html = `<div class="criatividade-section"><h3>Dança 1 - Criatividade (Máx 4,00) <select id="CVdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></h3><table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
+                html = `<div class="criatividade-section"><h3>Dança 1 - Criatividade (Máx 4,00) <select id="CVdança01" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></h3><div class="table-responsive"><table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
                             ${TEXTOS_CRIATIVIDADE_D1.map((txt, index) => {
                                 let i = index + 1;
                                 return `<tr><td>${txt}</td><td><input type="text" class="nota-input cvd1" id="CVD1desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td></tr>`;
                             }).join('')}
-                        </tbody></table></div>
-                <div class="criatividade-section"><h3>Dança 2 - Variações (Máx 4,00) <select id="CVdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></h3><table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
+                        </tbody></table></div></div>
+                <div class="criatividade-section"><h3>Dança 2 - Variações (Máx 4,00) <select id="CVdança02" class="select-danca-obrigatorio">${OPCOES_DANCAS_HTML}</select></h3><div class="table-responsive"><table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
                             ${TEXTOS_CRIATIVIDADE_D2.map((txt, index) => {
                                 let i = index + 1;
                                 return `<tr><td>${txt}</td><td><input type="text" class="nota-input cvd2" id="CVD2desc0${i}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td></tr>`;
                             }).join('')}
-                        </tbody></table></div>`;
+                        </tbody></table></div></div>`;
             }
             area.innerHTML = html;
         } else {
@@ -762,12 +809,13 @@
         }
 
         let tabelaHtml = `
-            <div style="margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 15px;">
+            <div style="margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
                 <label style="font-weight: bold; font-size: 14px; color: #37474f;">Dança Executada no Conjunto:</label>
-                <select id="${prefixoIdAba}dançaconj_${cod}" class="select-conjunto-danca-item" style="padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-weight: bold;">
+                <select id="${prefixoIdAba}dançaconj_${cod}" class="select-conjunto-danca-item" style="padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-weight: bold; width: 100%;">
                     ${OPCOES_DANCAS_HTML}
                 </select>
             </div>
+            <div class="table-responsive">
             <table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
             ${listaTextosUsar.map((txt, index) => {
                 let i = index + 1;
@@ -800,7 +848,7 @@
                     <td><input type="text" class="nota-input input-desc-conjunto-${cod}" id="${prefixoId}desc0${i}_${cod}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
                 </tr>`;
             }).join('')}
-        </tbody></table>`;
+        </tbody></table></div>`;
 
         let blocoHtml = `
         <div class="bloco-concorrente-conjunto ${classeEstiloBloco}" id="bloco_conj_${cod}" data-codigo="${cod}">
@@ -820,8 +868,8 @@
 
             ${tabelaHtml}
 
-            <div class="info-group" style="grid-template-columns: 1fr 5fr; padding: 15px; margin-bottom: 15px;">
-                <div class="field-block">
+            <div class="info-group" style="grid-template-columns: 1fr; padding: 15px; margin-bottom: 15px;">
+                <div class="field-block" style="margin-bottom: 10px;">
                     <label style="color: var(--danger-color); font-weight: bold;">${labelIndumentaria}</label>
                     <input type="text" id="desc_indumentaria_${cod}" value="0,00" class="nota-input" oninput="formatarNota(this)" onblur="finalizarNota(this)" style="width:100%; border-color:var(--danger-color); text-align: center;">
                 </div>
@@ -892,119 +940,117 @@
     }
 
     function enviarDadosParaSheets() {
-    const btn = document.querySelector(".btn-enviar");
-    document.querySelectorAll('.borda-erro').forEach(el => el.classList.remove('borda-erro'));
+        const btn = document.querySelector(".btn-enviar");
+        document.querySelectorAll('.borda-erro').forEach(el => el.classList.remove('borda-erro'));
 
-    if (modoAtivo === "INDIVIDUAL") {
-        const codCandidato = document.getElementById("cod_candidato").value;
-        if (!codCandidato) { alert("Por favor, selecione o número do candidato."); return; }
-        
-        // CORREÇÃO DA SIGLA: Mapeia exatamente a aba ativa para a sigla do ID correto
-        let prefixoIdAba = "CC";
-        if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
-        else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
-        else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
+        if (modoAtivo === "INDIVIDUAL") {
+            const codCandidato = document.getElementById("cod_candidato").value;
+            if (!codCandidato) { alert("Por favor, selecione o número do candidato."); return; }
+            
+            let prefixoIdAba = "CC";
+            if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
+            else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
+            else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
 
-        const danca1Select = document.getElementById(`${prefixoIdAba}dança01`);
-        const danca2Select = document.getElementById(`${prefixoIdAba}dança02`);
+            const danca1Select = document.getElementById(`${prefixoIdAba}dança01`);
+            const danca2Select = document.getElementById(`${prefixoIdAba}dança02`);
 
-        let erroDanca = false;
-        if (danca1Select && !danca1Select.value) {
-            danca1Select.classList.add('borda-erro');
-            erroDanca = true;
-        }
-        if (danca2Select && !danca2Select.value) {
-            danca2Select.classList.add('borda-erro');
-            erroDanca = true;
-        }
-
-        // Bloqueia o envio e foca no seletor vazio
-        if (erroDanca) {
-            alert("Atenção: A dança correspondente não foi escolhida! Por favor, selecione as danças avaliadas nos campos indicados em vermelho.");
-            if (danca1Select && !danca1Select.value) danca1Select.focus();
-            else if (danca2Select && !danca2Select.value) danca2Select.focus();
-            return;
-        }
-
-        if (!confirm("Confirmar envio desta avaliação para a planilha?")) return;
-
-        btn.disabled = true; btn.innerText = "Enviando...";
-
-        let pacoteDados = montarPacoteBase(codCandidato);
-        const todosInputsDesconto = document.querySelectorAll(".nota-input:not(#desc_indumentaria)");
-        todosInputsDesconto.forEach(inp => { if(inp.id) pacoteDados[inp.id] = inp.value || "0,00"; });
-
-        dispararFetchEnvio(pacoteDados, btn);
-    } 
-    else {
-        if (concorrentesNoConjuntoAtivo.length === 0) { alert("Adicione ao menos 1 concorrente ao conjunto antes de enviar."); return; }
-        
-        let prefixoIdAba = "CC";
-        if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
-        else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
-        else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
-
-        let erroConjuntoDanca = false;
-        let primeiroSelectComErro = null;
-
-        for (let i = 0; i < concorrentesNoConjuntoAtivo.length; i++) {
-            let cod = concorrentesNoConjuntoAtivo[i];
-            let selectDanca = document.getElementById(`${prefixoIdAba}dançaconj_${cod}`);
-            if (selectDanca && !selectDanca.value) {
-                selectDanca.classList.add('borda-erro');
-                erroConjuntoDanca = true;
-                if (!primeiroSelectComErro) primeiroSelectComErro = selectDanca;
+            let erroDanca = false;
+            if (danca1Select && !danca1Select.value) {
+                danca1Select.classList.add('borda-erro');
+                erroDanca = true;
             }
-        }
+            if (danca2Select && !danca2Select.value) {
+                danca2Select.classList.add('borda-erro');
+                erroDanca = true;
+            }
 
-        if (erroConjuntoDanca) {
-            alert("Atenção: Um ou mais concorrentes no bloco coletivo estão sem a dança do conjunto escolhida. Verifique os campos destacados em vermelho.");
-            if (primeiroSelectComErro) primeiroSelectComErro.focus();
-            return;
-        }
+            if (erroDanca) {
+                alert("Atenção: A dança correspondente não foi escolhida! Por favor, selecione as danças avaliadas nos campos indicados em vermelho.");
+                if (danca1Select && !danca1Select.value) danca1Select.focus();
+                else if (danca2Select && !danca2Select.value) danca2Select.focus();
+                return;
+            }
 
-        if (!confirm(`Confirmar envio individual simultâneo de ${concorrentesNoConjuntoAtivo.length} concorrente(s)?`)) return;
+            if (!confirm("Confirmar envio desta avaliação para a planilha?")) return;
 
-        btn.disabled = true; btn.innerText = "Enviando...";
-        let promessasEnvio = [];
+            btn.disabled = true; btn.innerText = "Enviando...";
 
-        concorrentesNoConjuntoAtivo.forEach(cod => {
-            let pacoteDados = montarPacoteBaseConjunto(cod);
+            let pacoteDados = montarPacoteBase(codCandidato);
+            const todosInputsDesconto = document.querySelectorAll(".nota-input:not(#desc_indumentaria)");
+            todosInputsDesconto.forEach(inp => { if(inp.id) pacoteDados[inp.id] = inp.value || "0,00"; });
 
-            const inputsDesteCod = document.querySelectorAll(`[id$="_${cod}"]`);
-            inputsDesteCod.forEach(inp => {
-                let idLimpo = inp.id.split('_')[0]; 
-                if(idLimpo !== "desc_indumentaria" && idLimpo !== "obs_campo") {
-                    pacoteDados[idLimpo] = inp.value || "0,00";
+            dispararFetchEnvio(pacoteDados, btn);
+        } 
+        else {
+            if (concorrentesNoConjuntoAtivo.length === 0) { alert("Adicione ao menos 1 concorrente ao conjunto antes de enviar."); return; }
+            
+            let prefixoIdAba = "CC";
+            if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
+            else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
+            else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
+
+            let erroConjuntoDanca = false;
+            let primeiroSelectComErro = null;
+
+            for (let i = 0; i < concorrentesNoConjuntoAtivo.length; i++) {
+                let cod = concorrentesNoConjuntoAtivo[i];
+                let selectDanca = document.getElementById(`${prefixoIdAba}dançaconj_${cod}`);
+                if (selectDanca && !selectDanca.value) {
+                    selectDanca.classList.add('borda-erro');
+                    erroConjuntoDanca = true;
+                    if (!primeiroSelectComErro) primeiroSelectComErro = selectDanca;
                 }
+            }
+
+            if (erroConjuntoDanca) {
+                alert("Atenção: Um ou mais concorrentes no bloco coletivo estão sem a dança do conjunto escolhida. Verifique os campos destacados em vermelho.");
+                if (primeiroSelectComErro) primeiroSelectComErro.focus();
+                return;
+            }
+
+            if (!confirm(`Confirmar envio individual simultâneo de ${concorrentesNoConjuntoAtivo.length} concorrente(s)?`)) return;
+
+            btn.disabled = true; btn.innerText = "Enviando...";
+            let promessasEnvio = [];
+
+            concorrentesNoConjuntoAtivo.forEach(cod => {
+                let pacoteDados = montarPacoteBaseConjunto(cod);
+
+                const inputsDesteCod = document.querySelectorAll(`[id$="_${cod}"]`);
+                inputsDesteCod.forEach(inp => {
+                    let idLimpo = inp.id.split('_')[0]; 
+                    if(idLimpo !== "desc_indumentaria" && idLimpo !== "obs_campo") {
+                        pacoteDados[idLimpo] = inp.value || "0,00";
+                    }
+                });
+
+                promessasEnvio.push(
+                    fetch(URL_SCRIPT_ENVIO, {
+                        method: 'POST',
+                        mimeType: 'application/json',
+                        body: JSON.stringify(pacoteDados)
+                    })
+                );
             });
 
-            promessasEnvio.push(
-                fetch(URL_SCRIPT_ENVIO, {
-                    method: 'POST',
-                    mimeType: 'application/json',
-                    body: JSON.stringify(pacoteDados)
+            Promise.all(promessasEnvio)
+                .then(() => {
+                    btn.disabled = false; btn.innerText = "Enviar Avaliação";
+                    alert("Todas as avaliações individuais enviadas com sucesso!");
+                    
+                    concorrentesNoConjuntoAtivo = [];
+                    const subContainer = document.getElementById("sub-container-tabelas-conjunto");
+                    if (subContainer) subContainer.innerHTML = "";
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 })
-            );
-        });
-
-        Promise.all(promessasEnvio)
-            .then(() => {
-                btn.disabled = false; btn.innerText = "Enviar Avaliação";
-                alert("Todas as avaliações individuais enviadas com sucesso!");
-                
-                concorrentesNoConjuntoAtivo = [];
-                const subContainer = document.getElementById("sub-container-tabelas-conjunto");
-                if (subContainer) subContainer.innerHTML = "";
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            })
-            .catch(err => {
-                btn.disabled = false; btn.innerText = "Enviar Avaliação";
-                alert("Ocorreu um erro ao salvar um ou mais dados.");
-                console.error(err);
-            });
+                .catch(err => {
+                    btn.disabled = false; btn.innerText = "Enviar Avaliação";
+                    alert("Ocorreu um erro ao salvar um ou mais dados.");
+                    console.error(err);
+                });
+        }
     }
-}
 
     function montarPacoteBase(cod) {
         const c = bancoCandidatos[cod];
@@ -1090,10 +1136,7 @@
         .then(() => {
             elementoBotao.disabled = false; elementoBotao.innerText = "Enviar Avaliação";
             alert("Avaliação enviada com sucesso para a Planilha!");
-            
-            // MODIFICAÇÃO SOLICITADA: Invoca a limpeza completa e desmarcação dos checkboxes pós-envio
             limparFormularioAposEnvio();
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         })
         .catch(err => {
@@ -1106,3 +1149,4 @@
 
 </body>
 </html>
+
