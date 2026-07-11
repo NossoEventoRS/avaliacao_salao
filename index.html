@@ -545,49 +545,84 @@ textarea {
             });
     }
 
+function carregarCandidatosNoSelect(dadosCandidatos) {
+    // 1. Captura os dois seletores da tela (Modo Individual e Modo Conjunto)
+    const selectIndividual = document.getElementById("cod_candidato");
+    const selectConjunto = document.getElementById("select_conjunto_add");
+
+    // 2. Limpa o conteúdo atual de ambos deixando apenas a opção padrão
+    if (selectIndividual) selectIndividual.innerHTML = '<option value="">Selecione...</option>';
+    if (selectConjunto) selectConjunto.innerHTML = '<option value="">Escolha...</option>';
+
+    // 3. Verifica se vieram dados válidos do Google Sheets
+    if (!dadosCandidatos || !Array.isArray(dadosCandidatos)) {
+        console.warn("Nenhum candidato encontrado ou formato inválido recebido.");
+        return;
+    }
+
+    // 4. Percorre a lista de candidatos e adiciona dinamicamente as opções em ambos os seletores
+    dadosCandidatos.forEach(candidato => {
+        if (candidato.codigo) {
+            const cod = candidato.codigo.toString().trim();
+            const nome = candidato.concorrente ? candidato.concorrente.trim() : "";
+            
+            // Texto formatado amigável para o avaliador ver (Ex: "05 - João e Maria")
+            const textoOpcao = `${cod} - ${nome}`;
+
+            // Adiciona no seletor do Modo Individual
+            if (selectIndividual) {
+                const optIndiv = document.createElement("option");
+                optIndiv.value = cod;
+                optIndiv.textContent = textoOpcao;
+                selectIndividual.appendChild(optIndiv);
+            }
+
+            // Adiciona no seletor do Modo Conjunto
+            if (selectConjunto) {
+                const optConj = document.createElement("option");
+                optConj.value = cod;
+                optConj.textContent = textoOpcao;
+                selectConjunto.appendChild(optConj);
+            }
+        }
+    });
+    
+    console.log(`Sucesso: ${dadosCandidatos.length} candidatos carregados nos seletores virtuais.`);
+}
+
     function sairParaLogin() {
-        if (!confirm("Deseja realmente sair e retornar à tela de login? Quaisquer dados não enviados serão perdidos.")) return;
-        
-        avaliadorLogado = "";
-        document.getElementById('userLogin').value = "";
-        document.getElementById('passLogin').value = "";
-        
-        const btnLogin = document.getElementById('btnLogin');
+    if (!confirm("Deseja realmente sair e retornar à tela de login? Quaisquer dados não enviados serão perdidos.")) return;
+    
+    avaliadorLogado = "";
+    document.getElementById('userLogin').value = "";
+    document.getElementById('passLogin').value = "";
+    
+    const btnLogin = document.getElementById('btnLogin');
+    if (btnLogin) {
         btnLogin.disabled = false;
         btnLogin.innerText = "ENTRAR";
-
-        document.getElementById("form-avaliacao").style.display = "none";
-        document.getElementById("menu-inicial").style.display = "block";
-        document.getElementById("container-sistema").className = "container";
-        document.getElementById("form-avaliacao").reset();
-        
+    }
+    
+    document.getElementById("form-avaliacao").style.display = "none";
+    document.getElementById("menu-inicial").style.display = "block";
+    document.getElementById("container-sistema").className = "container";
+    
+    // CORREÇÃO: Substituído o .reset() defeituoso pela limpeza correta
+    if (typeof limparFormularioAposEnvio === "function") {
+        limparFormularioAposEnvio();
+    } else {
         limparCamposCandidato();
-        concorrentesNoConjuntoAtivo = [];
-        totalAdicionadosContador = 0;
-        document.getElementById("dinamico-planilha").innerHTML = "";
-
-        document.getElementById('container-sistema').style.display = 'none';
-        document.getElementById('telaLogin').style.display = 'block';
     }
-
-    function carregarCandidatosNoSelect(dados) {
-        const selectIndiv = document.getElementById("cod_candidato");
-        const selectConj = document.getElementById("select_conjunto_add");
-        
-        selectIndiv.innerHTML = '<option value="">Selecione...</option>';
-        selectConj.innerHTML = '<option value="">Escolha...</option>';
-
-        dados.forEach(item => {
-            const cod = String(item.codigo || "").trim();
-            if(cod) {
-                let opt1 = document.createElement("option"); opt1.value = cod; opt1.text = cod;
-                selectIndiv.add(opt1);
-
-                let opt2 = document.createElement("option"); opt2.value = cod; opt2.text = `${cod} - ${item.concorrente}`;
-                selectConj.add(opt2);
-            }
-        });
-    }
+    
+    concorrentesNoConjuntoAtivo = [];
+    totalAdicionadosContador = 0;
+    
+    const painelDinamico = document.getElementById("dinamico-planilha");
+    if (painelDinamico) painelDinamico.innerHTML = "";
+    
+    document.getElementById('container-sistema').style.display = 'none';
+    document.getElementById('telaLogin').style.display = 'block';
+}
 
     function selecionarCandidato(cod) {
         const c = bancoCandidatos[String(cod).trim()];
@@ -602,7 +637,7 @@ textarea {
         }
     }
 
-    function limparFormularioAposEnvio() {
+   function limparFormularioAposEnvio() {
     // 1. LIMPEZA TOTAL DA DANÇA DO TOPO (Força visual e lógica absoluta)
     const selectDancaTopo = document.getElementById("select_danca_topo");
     if (selectDancaTopo) {
@@ -620,48 +655,102 @@ textarea {
             }
         }
         
-        // Atualiza explicitamente a propriedade value com o valor vazio da primeira opção
-        selectDancaTopo.value = selectDancaTopo.options[0].value;
+        if (selectDancaTopo.options.length > 0) {
+            selectDancaTopo.value = selectDancaTopo.options[0].value;
+        }
     }
 
-    // 2. Limpa o container de blocos de conjunto adicionados e reseta o array de controle
-    const subContainer = document.getElementById("sub-container-tabelas-conjunto");
-    if (subContainer) subContainer.innerHTML = "";
+    // 2. MANTÉM OS BOXES NA TELA NO MODO CONJUNTO
     if (typeof concorrentesNoConjuntoAtivo !== "undefined") {
-        concorrentesNoConjuntoAtivo = [];
+        // Mantemos a estrutura dos blocos intacta na tela
     }
 
-    // 3. Reseta o seletor de adicionar candidatos do topo
+    // 3. Reseta o seletor de adicionar candidatos do topo (Modo Conjunto)
     const seletorConjuntoAdd = document.getElementById("select_conjunto_add");
     if (seletorConjuntoAdd) seletorConjuntoAdd.selectedIndex = 0;
 
-    // Limpezas originais do formulário individual/base
+    // 4. Limpezas do seletor/código do candidato principal (Modo Individual)
     const seletorCandidato = document.getElementById("cod_candidato");
     if (seletorCandidato) seletorCandidato.value = "";
-    limparCamposCandidato();
+    
+    // Executa a função nativa se ela existir
+    if (typeof limparCamposCandidato === "function") {
+        try {
+            limparCamposCandidato();
+        } catch (err) {
+            console.warn("Aviso ao rodar limparCamposCandidato nativa:", err);
+        }
+    }
 
-    const todosSeletoresDanca = document.querySelectorAll(".select-danca-obrigatorio");
-    todosSeletoresDanca.forEach(select => { select.selectedIndex = 0; });
+    // [CORREÇÃO CRÍTICA FIXA] 4.1 LIMPA OS INPUTS DE TEXTO DO CABEÇALHO INDIVIDUAL
+    // Força manualmente a limpeza caso a função limparCamposCandidato falhe
+    const idsIndividuais = ["concorrente", "categoria", "entidade", "municipio", "rt"];
+    idsIndividuais.forEach(id => {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.value = "";
+    });
 
-    const todosInputsNotas = document.querySelectorAll(".nota-input");
+    // [CORREÇÃO CRÍTICA DINÂMICA] 4.2 LIMPA OS DADOS DE TEXTO INTERNOS DOS BOXES DE CONJUNTO
+    // Encontra e limpa todos os spans/divs de texto clonados no modo conjunto
+    const todosElementosCandidatos = document.querySelectorAll(
+        "[id*='concorrente_nome'], [id*='categoria_nome'], [id*='entidade_nome'], [id*='modalidade_nome']"
+    );
+    todosElementosCandidatos.forEach(campo => {
+        if (campo.tagName === "INPUT" || campo.tagName === "TEXTAREA") {
+            campo.value = "";
+        } else {
+            campo.innerText = "";
+            campo.textContent = "";
+        }
+    });
+
+    // 5. RESETA TODOS OS SELETORES DE DANÇA DENTRO DOS BOXES E TABELAS
+    const todosSeletoresDanca = document.querySelectorAll(".select-danca-obrigatorio, [id*='dançaconj_']");
+    todosSeletoresDanca.forEach(select => { 
+        select.selectedIndex = 0; 
+        select.value = "";
+    });
+
+    // 6. RESETA TODAS AS NOTAS DE INPUTS NUMÉRICOS (BASE E DINÂMICOS)
+    const todosInputsNotas = document.querySelectorAll(".nota-input, [id*='nota1_'], [id*='nota2_'], [id*='desc_indumentaria_']");
     todosInputsNotas.forEach(inp => {
-        if (inp.id === "desc_indumentaria") { 
+        if (inp.id.includes("desc_indumentaria")) { 
             inp.value = "0,000"; 
         } else { 
             inp.value = ""; 
         }
     });
 
-    const campoObs = document.getElementById("obs_campo");
-    if (campoObs) campoObs.value = "";
+    // 7. RESETA OBSERVAÇÕES E CHECKBOXES (INCLUINDO DOS BOXES)
+    const todosCamposObs = document.querySelectorAll("#obs_campo, [id*='obs_campo_']");
+    todosCamposObs.forEach(campoObs => {
+        campoObs.value = "";
+    });
 
-    const checkboxes = document.querySelectorAll(".obs-trigger");
+    const checkboxes = document.querySelectorAll(".obs-trigger, input[type='checkbox']");
     checkboxes.forEach(checkbox => {
         checkbox.checked = false;
     });
 
-    if (typeof atualizarCalculos === "function") atualizarCalculos();
+    // 8. RESETA OS LABELS DE TOTAL NO RODAPÉ VISUAL DE TODOS OS BOXES PARA O PADRÃO
+    const todosLabelsN1 = document.querySelectorAll("#label-n1, [id*='label-n1_']");
+    const todosLabelsN2 = document.querySelectorAll("#label-n2, [id*='label-n2_']");
+    const todosLabelsTotal = document.querySelectorAll("#label-total, [id*='label-total_']");
+    
+    todosLabelsN1.forEach(lbl => lbl.innerText = "4,000");
+    todosLabelsN2.forEach(lbl => lbl.innerText = "4,000");
+    todosLabelsTotal.forEach(lbl => lbl.innerText = "8,00");
+
+    // 9. RECALCULA OS TOTAIS COM SEGURANÇA PARA ATUALIZAR A TELA SEM ERROS
+    try {
+        if (typeof atualizarCalculos === "function") {
+            atualizarCalculos();
+        }
+    } catch (e) {
+        console.warn("Aviso ao atualizar cálculos pós-limpeza:", e);
+    }
 }
+
 
 function atualizarRelogio() {
     const agora = new Date();
@@ -713,17 +802,41 @@ function atualizarRelogio() {
         atualizarCalculos();
     }
 
-    function voltarMenu() {
-        document.getElementById("form-avaliacao").style.display = "none";
-        document.getElementById("menu-inicial").style.display = "block";
-        document.getElementById("container-sistema").className = "container";
-        document.getElementById("form-avaliacao").reset();
-        document.getElementById('avaliador').value = avaliadorLogado;
+  function voltarMenu() {
+    // 1. Alterna a exibição visual entre as telas
+    const formAvaliacao = document.getElementById("form-avaliacao");
+    const menuInicial = document.getElementById("menu-inicial");
+    const containerSistema = document.getElementById("container-sistema");
+
+    if (formAvaliacao) formAvaliacao.style.display = "none";
+    if (menuInicial) menuInicial.style.display = "block";
+    if (containerSistema) containerSistema.className = "container";
+
+    // 2. Chama a função de limpeza profunda para resetar todos os campos e boxes
+    if (typeof limparFormularioAposEnvio === "function") {
+        limparFormularioAposEnvio();
+    } else {
         limparCamposCandidato();
-        concorrentesNoConjuntoAtivo = [];
-        totalAdicionadosContador = 0;
-        document.getElementById("dinamico-planilha").innerHTML = "";
     }
+
+    // 3. Garante que o ID do avaliador logado permaneça preenchido no topo
+    const campoAvaliador = document.getElementById('avaliador');
+    if (campoAvaliador && typeof avaliadorLogado !== "undefined") {
+        campoAvaliador.value = avaliadorLogado;
+    }
+
+    // 4. Limpa as estruturas e dados dinâmicos do Modo Conjunto COMPLETAMENTE ao sair
+    concorrentesNoConjuntoAtivo = [];
+    totalAdicionadosContador = 0;
+    
+    const containerDinamico = document.getElementById("dinamico-planilha");
+    if (containerDinamico) {
+        containerDinamico.innerHTML = ""; // No menu inicial, os boxes somem até nova seleção
+    }
+
+    // 5. Rola a tela suavemente para o topo do menu
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
     function formatarNota(input) {
         let v = input.value.replace(/[^\d,.]/g, '').replace(/\./g, ',');
@@ -1013,81 +1126,87 @@ function adicionarConcorrenteAoConjunto() {
     }
 
     function enviarDadosParaSheets() {
-        const btn = document.querySelector(".btn-enviar");
-        document.querySelectorAll('.borda-erro').forEach(el => el.classList.remove('borda-erro'));
+    const btn = document.querySelector(".btn-enviar");
+    document.querySelectorAll('.borda-erro').forEach(el => el.classList.remove('borda-erro'));
 
-        if (modoAtivo === "INDIVIDUAL") {
-            const codCandidato = document.getElementById("cod_candidato").value;
-            if (!codCandidato) { alert("Por favor, selecione o número do candidato."); return; }
-            
-            let prefixoIdAba = "CC";
-            if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
-            else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
-            else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
+    if (modoAtivo === "INDIVIDUAL") {
+        const codCandidato = document.getElementById("cod_candidato").value;
+        if (!codCandidato) { alert("Por favor, selecione o número do candidato."); return; }
+        
+        let prefixoIdAba = "CC";
+        if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
+        else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
+        else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
 
-            const danca1Select = document.getElementById(`${prefixoIdAba}dança01`);
-            const danca2Select = document.getElementById(`${prefixoIdAba}dança02`);
+        const danca1Select = document.getElementById(`${prefixoIdAba}dança01`);
+        const danca2Select = document.getElementById(`${prefixoIdAba}dança02`);
 
-            let erroDanca = false;
-            if (danca1Select && !danca1Select.value) {
-                danca1Select.classList.add('borda-erro');
-                erroDanca = true;
+        let erroDanca = false;
+        if (danca1Select && !danca1Select.value) {
+            danca1Select.classList.add('borda-erro');
+            erroDanca = true;
+        }
+        if (danca2Select && !danca2Select.value) {
+            danca2Select.classList.add('borda-erro');
+            erroDanca = true;
+        }
+
+        if (erroDanca) {
+            alert("Atenção: A dança correspondente não foi escolhida! Por favor, selecione as danças avaliadas nos campos indicados em vermelho.");
+            if (danca1Select && !danca1Select.value) danca1Select.focus();
+            else if (danca2Select && !danca2Select.value) danca2Select.focus();
+            return;
+        }
+
+        if (!confirm("Confirmar envio desta avaliação para a planilha?")) return;
+
+        btn.disabled = true; btn.innerText = "Enviando...";
+
+        let pacoteDados = montarPacoteBase(codCandidato);
+        const todosInputsDesconto = document.querySelectorAll(".nota-input:not(#desc_indumentaria)");
+        todosInputsDesconto.forEach(inp => { if(inp.id) pacoteDados[inp.id] = inp.value || "0,00"; });
+
+        dispararFetchEnvio(pacoteDados, btn);
+    } 
+    else {
+        if (concorrentesNoConjuntoAtivo.length === 0) { alert("Adicione ao menos 1 concorrente ao conjunto antes de enviar."); return; }
+        
+        let prefixoIdAba = "CC";
+        if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
+        else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
+        else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
+
+        let erroConjuntoDanca = false;
+        let primeiroSelectComErro = null;
+
+        for (let i = 0; i < concorrentesNoConjuntoAtivo.length; i++) {
+            let cod = concorrentesNoConjuntoAtivo[i];
+            let selectDanca = document.getElementById(`${prefixoIdAba}dançaconj_${cod}`);
+            if (selectDanca && !selectDanca.value) {
+                selectDanca.classList.add('borda-erro');
+                erroConjuntoDanca = true;
+                if (!primeiroSelectComErro) primeiroSelectComErro = selectDanca;
             }
-            if (danca2Select && !danca2Select.value) {
-                danca2Select.classList.add('borda-erro');
-                erroDanca = true;
-            }
+        }
 
-            if (erroDanca) {
-                alert("Atenção: A dança correspondente não foi escolhida! Por favor, selecione as danças avaliadas nos campos indicados em vermelho.");
-                if (danca1Select && !danca1Select.value) danca1Select.focus();
-                else if (danca2Select && !danca2Select.value) danca2Select.focus();
-                return;
-            }
+        if (erroConjuntoDanca) {
+            alert("Atenção: Um ou mais concorrentes no bloco coletivo estão sem a dança do conjunto escolhida. Verifique os campos destacados em vermelho.");
+            if (primeiroSelectComErro) primeiroSelectComErro.focus();
+            return;
+        }
 
-            if (!confirm("Confirmar envio desta avaliação para a planilha?")) return;
+        if (!confirm(`Confirmar envio individual sequencial de ${concorrentesNoConjuntoAtivo.length} concorrente(s)?`)) return;
 
-            btn.disabled = true; btn.innerText = "Enviando...";
+        btn.disabled = true;
+        
+        // FUNÇÃO RECURSIVA INTERNA SÍNCRONA PARA MANTER A FILA EM ORDEM LINEAR
+        let indexFila = 0;
 
-            let pacoteDados = montarPacoteBase(codCandidato);
-            const todosInputsDesconto = document.querySelectorAll(".nota-input:not(#desc_indumentaria)");
-            todosInputsDesconto.forEach(inp => { if(inp.id) pacoteDados[inp.id] = inp.value || "0,00"; });
+        async function processarEnvioSequencial() {
+            if (indexFila < concorrentesNoConjuntoAtivo.length) {
+                let cod = concorrentesNoConjuntoAtivo[indexFila];
+                btn.innerText = `Enviando ${indexFila + 1} de ${concorrentesNoConjuntoAtivo.length}...`;
 
-            dispararFetchEnvio(pacoteDados, btn);
-        } 
-        else {
-            if (concorrentesNoConjuntoAtivo.length === 0) { alert("Adicione ao menos 1 concorrente ao conjunto antes de enviar."); return; }
-            
-            let prefixoIdAba = "CC";
-            if (abaAtiva.startsWith("Ritmo")) prefixoIdAba = "RH";
-            else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
-            else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
-
-            let erroConjuntoDanca = false;
-            let primeiroSelectComErro = null;
-
-            for (let i = 0; i < concorrentesNoConjuntoAtivo.length; i++) {
-                let cod = concorrentesNoConjuntoAtivo[i];
-                let selectDanca = document.getElementById(`${prefixoIdAba}dançaconj_${cod}`);
-                if (selectDanca && !selectDanca.value) {
-                    selectDanca.classList.add('borda-erro');
-                    erroConjuntoDanca = true;
-                    if (!primeiroSelectComErro) primeiroSelectComErro = selectDanca;
-                }
-            }
-
-            if (erroConjuntoDanca) {
-                alert("Atenção: Um ou mais concorrentes no bloco coletivo estão sem a dança do conjunto escolhida. Verifique os campos destacados em vermelho.");
-                if (primeiroSelectComErro) primeiroSelectComErro.focus();
-                return;
-            }
-
-            if (!confirm(`Confirmar envio individual simultâneo de ${concorrentesNoConjuntoAtivo.length} concorrente(s)?`)) return;
-
-            btn.disabled = true; btn.innerText = "Enviando...";
-            let promessasEnvio = [];
-
-            concorrentesNoConjuntoAtivo.forEach(cod => {
                 let pacoteDados = montarPacoteBaseConjunto(cod);
 
                 const inputsDesteCod = document.querySelectorAll(`[id$="_${cod}"]`);
@@ -1098,53 +1217,62 @@ function adicionarConcorrenteAoConjunto() {
                     }
                 });
 
-                promessasEnvio.push(
-                    fetch(URL_SCRIPT_ENVIO, {
+                try {
+                    // O await congela a execução até o Google Sheets processar, salvar e responder OK
+                    await fetch(URL_SCRIPT_ENVIO, {
                         method: 'POST',
                         mimeType: 'application/json',
                         body: JSON.stringify(pacoteDados)
-                    })
-                );
-            });
-
-            Promise.all(promessasEnvio)
-                .then(() => {
-                    btn.disabled = false; 
-                    btn.innerText = "Enviar Avaliação";
-                    alert("Todas as avaliações individuais enviadas com sucesso!");
+                    });
                     
-                    // 1. Limpa apenas os concorrentes ativos e remove os blocos visuais da tela
-                    concorrentesNoConjuntoAtivo = [];
-                    const subContainer = document.getElementById("sub-container-tabelas-conjunto");
-                    if (subContainer) subContainer.innerHTML = "";
-                    
-                    // 2. Reseta o seletor de adicionar candidatos para o padrão
-                    const seletorConjuntoAdd = document.getElementById("select_conjunto_add");
-                    if (seletorConjuntoAdd) seletorConjuntoAdd.selectedIndex = 0;
+                    console.log(`Sucesso na gravação do concorrente: ${cod}`);
+                    indexFila++;
+                    processarEnvioSequencial(); // Chama o próximo item da fila de forma segura
+                } catch (erro) {
+                    console.error(`Falha temporária ao enviar código ${cod}, tentando novamente em 1.5s...`, erro);
+                    setTimeout(processarEnvioSequencial, 1500); // Se falhar por oscilação de rede, tenta novamente o mesmo índice
+                }
+            } else {
+                // SÓ CHEGA AQUI QUANDO TODA A FILA TERMINAR COM ABSOLUTO SUCESSO
+                btn.disabled = false; 
+                btn.innerText = "Enviar Avaliação";
+                alert("Todas as avaliações individuais foram salvas com sucesso!");
+                
+                // 1. Limpa apenas os concorrentes ativos e remove os blocos visuais da tela
+                concorrentesNoConjuntoAtivo = [];
+                const subContainer = document.getElementById("sub-container-tabelas-conjunto");
+                if (subContainer) subContainer.innerHTML = "";
+                
+                // 2. Reseta o seletor de adicionar candidatos para o padrão
+                const seletorConjuntoAdd = document.getElementById("select_conjunto_add");
+                if (seletorConjuntoAdd) seletorConjuntoAdd.selectedIndex = 0;
 
-                    // 3. FORÇA O RESET DA DANÇA DO BLOCO (CONJUNTO) PARA O ESTADO INICIAL
-                    const selectDancaTopo = document.getElementById("select_danca_topo");
-                    if (selectDancaTopo) {
-                        selectDancaTopo.selectedIndex = 0;
-                        selectDancaTopo.value = "";
-                        
-                        // Garante a renderização visual correta limpando atributos internos
-                        for (let i = 0; i < selectDancaTopo.options.length; i++) {
-                            if (i === 0) {
-                                selectDancaTopo.options[i].selected = true;
-                                selectDancaTopo.options[i].setAttribute('selected', 'selected');
-                            } else {
-                                selectDancaTopo.options[i].selected = false;
-                                selectDancaTopo.options[i].removeAttribute('selected');
-                            }
+                // 3. FORÇA O RESET DA DANÇA DO BLOCO (CONJUNTO) PARA O ESTADO INICIAL
+                const selectDancaTopo = document.getElementById("select_danca_topo");
+                if (selectDancaTopo) {
+                    selectDancaTopo.selectedIndex = 0;
+                    selectDancaTopo.value = "";
+                    
+                    for (let i = 0; i < selectDancaTopo.options.length; i++) {
+                        if (i === 0) {
+                            selectDancaTopo.options[i].selected = true;
+                            selectDancaTopo.options[i].setAttribute('selected', 'selected');
+                        } else {
+                            selectDancaTopo.options[i].selected = false;
+                            selectDancaTopo.options[i].removeAttribute('selected');
                         }
                     }
+                }
 
-                    // 4. Suaviza a rolagem de volta para o topo
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
+                // 4. Suaviza a rolagem de volta para o topo
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
+
+        // Inicia a execução da fila de envio controlado
+        processarEnvioSequencial();
     }
+}
 
     function montarPacoteBase(cod) {
         const c = bancoCandidatos[cod];
