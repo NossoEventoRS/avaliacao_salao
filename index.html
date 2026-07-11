@@ -226,7 +226,15 @@
             .action-buttons { flex-direction: row; justify-content: center; gap: 20px; }
             .btn-action { width: auto; padding: 15px 35px; font-size: 16px; }
         }
-
+textarea {
+    width: 100%;
+    min-height: 100px;
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    resize: vertical; /* Permite o avaliador puxar o cantinho se quiser aumentar ainda mais */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -266,10 +274,10 @@
         <div class="menu-secao secao-conj">
             <h3>Planilhas de Conjunto</h3>
             <div class="menu-grid">
-                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Correção_Coreografica_CJ', 'CONJUNTO')">Correção Coreográfica</button>
-                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Ritmo_Harmonia_CJ', 'CONJUNTO')">Ritmo e Harmonia</button>
-                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Interpretação_Artística_CJ', 'CONJUNTO')">Interpretação Artística</button>
-                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Criatividade_Variação_CJ', 'CONJUNTO')">Criatividade e Variação</button>
+                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Correção_Coreografica_CJ', 'CONJUNTO')">Correção Coreográfica<p>Conjunto</p></button>
+                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Ritmo_Harmonia_CJ', 'CONJUNTO')">Ritmo e Harmonia<p>Conjunto</p></button>
+                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Interpretação_Artística_CJ', 'CONJUNTO')">Interpretação Artística<p>Conjunto</p></button>
+                <button class="menu-btn btn-conj" onclick="abrirPlanilha('Criatividade_Variação_CJ', 'CONJUNTO')">Criatividade e Variação<p>Conjunto</p></button>
             </div>
         </div>
 
@@ -296,25 +304,45 @@
             </div>
         </div>
 
-        <div id="wrapper-cabecalho-conjunto" style="display: none;">
-            <div class="area-conjunto-controles">
-                <div class="field-block">
-                    <label>Adicionar Candidato ao Conjunto:</label>
-                    <select id="select_conjunto_add">
-                        <option value="">Escolha...</option>
-                    </select>
-                </div>
-                <button type="button" class="btn-add-conj" onclick="adicionarConcorrenteAoConjunto()">+ Adicionar à Tela</button>
-                <span style="font-size: 12px; color: #455a64; font-style: italic;">Permite avaliar múltiplos concorrentes simultaneamente.</span>
-            </div>
+       <div id="wrapper-cabecalho-conjunto" style="display: none;">
+    <div class="area-conjunto-controles">
+        <div class="field-block">
+            <label>Adicionar Candidato ao Conjunto:</label>
+            <select id="select_conjunto_add">
+                <option value="">Escolha...</option>
+            </select>
         </div>
+        
+<div class="field-block" id="bloco_danca_unificada_conjunto">
+    <label>Dança do Bloco (Conjunto):</label>
+    <!-- Alterado o ID aqui para não conflitar e facilitar a cópia -->
+    <select id="select_danca_topo">
+        <option value="">Selecione a dança...</option>
+        <option value="Bugio">01-Bugio</option>
+        <option value="Chamamé">02-Chamamé</option>
+        <option value="Chamarra">03-Chamarra</option>
+        <option value="Chote">04-Chote</option>
+        <option value="Mazurca">05-Mazurca</option>
+        <option value="Milonga">06-Milonga</option>
+        <option value="Polca">07-Polca</option>
+        <option value="Rancheira">08-Rancheira</option>
+        <option value="Terol">09-Terol</option>
+        <option value="Valsa">10-Valsa</option>
+        <option value="Vaneira">11-Vaneira</option> 
+    </select>
+</div>
+
+        <button type="button" class="btn-add-conj" onclick="adicionarConcorrenteAoConjunto()">+ Adicionar à Tela</button>
+        <span style="font-size: 12px; color: #455a64; font-style: italic;">Permite avaliar múltiplos concorrentes simultaneamente.</span>
+    </div>
+</div>
 
         <div id="dinamico-planilha"></div>
 
         <div id="results-box-individual" class="results-box">
             <div class="results-grid">
-                <div class="result-item"><span>Nota Dança 1</span><strong id="label-n1">4,00</strong></div>
-                <div class="result-item"><span>Nota Dança 2</span><strong id="label-n2">4,00</strong></div>
+                <div class="result-item"><span>Nota Dança 1</span><strong id="label-n1">4,000</strong></div>
+                <div class="result-item"><span>Nota Dança 2</span><strong id="label-n2">4,000</strong></div>
                 <div class="result-item final-total"><span>NOTA FINAL CRITÉRIO</span><strong id="label-total">8,00</strong></div>
             </div>
         </div>
@@ -323,12 +351,12 @@
             <div class="info-group" style="grid-template-columns: 1fr; margin-bottom: 15px; padding: 15px;">
                 <div class="field-block" style="margin-bottom: 10px;">
                     <label style="color: var(--danger-color);" id="lbl-indumentaria">DESC1.INDU:</label>
-                    <input type="text" id="desc_indumentaria" value="0,00" class="nota-input" oninput="formatarNota(this)" onblur="finalizarNota(this)" style="width:100%; border-color:var(--danger-color); text-align: center;">
+                    <input type="text" id="desc_indumentaria" value="0,000" class="nota-input" oninput="formatarNota(this)" onblur="finalizarNota(this)" style="width:100%; border-color:var(--danger-color); text-align: center;">
                 </div>
                 <div class="field-block">
-                    <label>Observações / Justificativas:</label>
-                    <input type="text" id="obs_campo" placeholder="Digite as observações e justificativas aqui..." style="width: 100%;">
-                </div>
+    <label>Observações / Justificativas:</label>
+    <textarea id="obs_campo" placeholder="Digite as observações e detalhamentos das justificativas aqui..." style="width: 100%; height: 120px; padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 15px; resize: vertical; font-family: inherit;"></textarea>
+</div>
             </div>
         </div>
 
@@ -574,46 +602,71 @@
         }
     }
 
-    function limparCamposCandidato() {
-        document.getElementById("concorrente").value = "";
-        document.getElementById("categoria").value = "";
-        document.getElementById("entidade").value = "";
-        document.getElementById("municipio").value = "";
-        document.getElementById("rt").value = "";
-    }
-
     function limparFormularioAposEnvio() {
-        const seletorCandidato = document.getElementById("cod_candidato");
-        if (seletorCandidato) seletorCandidato.value = "";
-        limparCamposCandidato();
-
-        const todosSeletoresDanca = document.querySelectorAll(".select-danca-obrigatorio");
-        todosSeletoresDanca.forEach(select => { select.value = ""; });
-
-        const todosInputsNotas = document.querySelectorAll(".nota-input");
-        todosInputsNotas.forEach(inp => {
-            if (inp.id === "desc_indumentaria") { 
-                inp.value = "0,00"; 
-            } else { 
-                inp.value = ""; 
+    // 1. LIMPEZA TOTAL DA DANÇA DO TOPO (Força visual e lógica absoluta)
+    const selectDancaTopo = document.getElementById("select_danca_topo");
+    if (selectDancaTopo) {
+        selectDancaTopo.selectedIndex = 0;
+        selectDancaTopo.value = "";
+        
+        // Aplica o reset manual em cada option interna do navegador
+        for (let i = 0; i < selectDancaTopo.options.length; i++) {
+            if (i === 0) {
+                selectDancaTopo.options[i].selected = true;
+                selectDancaTopo.options[i].setAttribute('selected', 'selected');
+            } else {
+                selectDancaTopo.options[i].selected = false;
+                selectDancaTopo.options[i].removeAttribute('selected');
             }
-        });
-
-        const campoObs = document.getElementById("obs_campo");
-        if (campoObs) campoObs.value = "";
-
-        const checkboxes = document.querySelectorAll(".obs-trigger");
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-
-        if (typeof atualizarCalculos === "function") atualizarCalculos();
+        }
+        
+        // Atualiza explicitamente a propriedade value com o valor vazio da primeira opção
+        selectDancaTopo.value = selectDancaTopo.options[0].value;
     }
 
-    function atualizarRelogio() {
-        const agora = new Date();
-        document.getElementById('data_hora').value = `${String(agora.getDate()).padStart(2,'0')}/${String(agora.getMonth()+1).padStart(2,'0')}/${agora.getFullYear()} ${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}:${String(agora.getSeconds()).padStart(2,'0')}`;
+    // 2. Limpa o container de blocos de conjunto adicionados e reseta o array de controle
+    const subContainer = document.getElementById("sub-container-tabelas-conjunto");
+    if (subContainer) subContainer.innerHTML = "";
+    if (typeof concorrentesNoConjuntoAtivo !== "undefined") {
+        concorrentesNoConjuntoAtivo = [];
     }
+
+    // 3. Reseta o seletor de adicionar candidatos do topo
+    const seletorConjuntoAdd = document.getElementById("select_conjunto_add");
+    if (seletorConjuntoAdd) seletorConjuntoAdd.selectedIndex = 0;
+
+    // Limpezas originais do formulário individual/base
+    const seletorCandidato = document.getElementById("cod_candidato");
+    if (seletorCandidato) seletorCandidato.value = "";
+    limparCamposCandidato();
+
+    const todosSeletoresDanca = document.querySelectorAll(".select-danca-obrigatorio");
+    todosSeletoresDanca.forEach(select => { select.selectedIndex = 0; });
+
+    const todosInputsNotas = document.querySelectorAll(".nota-input");
+    todosInputsNotas.forEach(inp => {
+        if (inp.id === "desc_indumentaria") { 
+            inp.value = "0,000"; 
+        } else { 
+            inp.value = ""; 
+        }
+    });
+
+    const campoObs = document.getElementById("obs_campo");
+    if (campoObs) campoObs.value = "";
+
+    const checkboxes = document.querySelectorAll(".obs-trigger");
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    if (typeof atualizarCalculos === "function") atualizarCalculos();
+}
+
+function atualizarRelogio() {
+    const agora = new Date();
+    document.getElementById('data_hora').value = `${String(agora.getDate()).padStart(2,'0')}/${String(agora.getMonth()+1).padStart(2,'0')}/${agora.getFullYear()} ${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}:${String(agora.getSeconds()).padStart(2,'0')}`;
+}
 
     function abrirPlanilha(aba, modo) {
         abaAtiva = aba;
@@ -680,10 +733,11 @@
         atualizarCalculos();
     }
 
-    function finalizarNota(input) {
+ function finalizarNota(input) {
         if (!input.value.trim()) return;
         let n = parseFloat(input.value.replace(',', '.'));
-        input.value = isNaN(n) ? "0,00" : n.toFixed(2).replace('.', ',');
+        // Alterado de .toFixed(2) para .toFixed(3) para garantir 3 casas decimais
+        input.value = isNaN(n) ? "0,000" : n.toFixed(3).replace('.', ',');
         atualizarCalculos();
     }
 
@@ -779,121 +833,135 @@
         }
     }
 
-    function adicionarConcorrenteAoConjunto() {
-        const select = document.getElementById("select_conjunto_add");
-        const cod = select.value;
-        if (!cod) { alert("Selecione um concorrente primeiro."); return; }
-        if (concorrentesNoConjuntoAtivo.includes(cod)) { alert("Este concorrente já foi adicionado."); return; }
+   
+function adicionarConcorrenteAoConjunto() {
+    const select = document.getElementById("select_conjunto_add");
+    const cod = select.value;
+    if (!cod) { alert("Selecione um concorrente primeiro."); return; }
+    if (concorrentesNoConjuntoAtivo.includes(cod)) { alert("Este concorrente já foi adicionado."); return; }
 
-        const c = bancoCandidatos[cod];
-        const subContainer = document.getElementById("sub-container-tabelas-conjunto");
-        concorrentesNoConjuntoAtivo.push(cod);
-        totalAdicionadosContador++; 
+    const c = bancoCandidatos[cod];
+    const subContainer = document.getElementById("sub-container-tabelas-conjunto");
+    concorrentesNoConjuntoAtivo.push(cod);
+    totalAdicionadosContador++; 
 
-        const classeEstiloBloco = (totalAdicionadosContador % 2 !== 0) ? "bloco-estilo-azul" : "bloco-estilo-verde";
-        let prefixoIdAba = "CC";
-        if (abaAtiva.startsWith("Ritmo") || abaAtiva.startsWith("Retmo")) prefixoIdAba = "RH";
-        else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
-        else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
+    const classeEstiloBloco = (totalAdicionadosContador % 2 !== 0) ? "bloco-estilo-azul" : "bloco-estilo-verde";
+    let prefixoIdAba = "CC";
+    if (abaAtiva.startsWith("Ritmo") || abaAtiva.startsWith("Retmo")) prefixoIdAba = "RH";
+    else if (abaAtiva.startsWith("Interpretação")) prefixoIdAba = "IA";
+    else if (abaAtiva.startsWith("Criatividade")) prefixoIdAba = "CV";
 
-        let labelIndumentaria = "Desconto Indumentária:";
-        let prefixoId = "CCDC";
-        let listaTextosUsar = TEXTOS_COREOGRAFIA;
+    let labelIndumentaria = "Desconto Indumentária:";
+    let prefixoId = "CCDC";
+    let listaTextosUsar = TEXTOS_COREOGRAFIA;
 
-        if(abaAtiva.startsWith("Ritmo_Harmonia")) {
-            prefixoId = "RHDC";
-            listaTextosUsar = TEXTOS_RITMO;
-        } else if(abaAtiva.startsWith("Interpretação_Artística")) {
-            prefixoId = "IADC";
-            listaTextosUsar = TEXTOS_INTERPRETACAO;
-        } else if(abaAtiva.startsWith("Criatividade_Variação")) {
-            prefixoId = "CVDC";
-            listaTextosUsar = TEXTOS_CRIATIVIDADE_DC;
-        }
+    if(abaAtiva.startsWith("Ritmo_Harmonia")) {
+        prefixoId = "RHDC";
+        listaTextosUsar = TEXTOS_RITMO;
+    } else if(abaAtiva.startsWith("Interpretação_Artística")) {
+        prefixoId = "IADC";
+        listaTextosUsar = TEXTOS_INTERPRETACAO;
+    } else if(abaAtiva.startsWith("Criatividade_Variação")) {
+        prefixoId = "CVDC";
+        listaTextosUsar = TEXTOS_CRIATIVIDADE_DC;
+    }
 
-        let tabelaHtml = `
-            <div style="margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
-                <label style="font-weight: bold; font-size: 14px; color: #37474f;">Dança Executada no Conjunto:</label>
-                <select id="${prefixoIdAba}dançaconj_${cod}" class="select-conjunto-danca-item" style="padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-weight: bold; width: 100%;">
-                    ${OPCOES_DANCAS_HTML}
-                </select>
-            </div>
-            <div class="table-responsive">
-            <table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
-            ${listaTextosUsar.map((txt, index) => {
-                let i = index + 1;
-                let subSeletores = "";
-                
-                if (abaAtiva.startsWith("Ritmo_Harmonia") && i === 1) {
+    let tabelaHtml = `
+        <div style="margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
+            <label style="font-weight: bold; font-size: 14px; color: #37474f;">Dança Executada no Conjunto:</label>
+            <select id="${prefixoIdAba}dançaconj_${cod}" class="select-conjunto-danca-item" style="padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-weight: bold; width: 100%;">
+                ${OPCOES_DANCAS_HTML}
+            </select>
+        </div>
+        <div class="table-responsive">
+        <table><thead><tr><th class="th-main" style="width: 80%;">Itens Observados</th><th style="width: 20%;">Desconto</th></tr></thead><tbody>
+        ${listaTextosUsar.map((txt, index) => {
+            let i = index + 1;
+            let subSeletores = "";
+            
+            if (abaAtiva.startsWith("Ritmo_Harmonia") && i === 1) {
+                subSeletores = `
+                <div class="wrapper-sub-seletores">
+                    <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Ritmo não ordenado: Peão"> Peão</label>
+                    <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Ritmo não ordenado: Prenda"> Prenda</label>
+                </div>`;
+            } else if (abaAtiva.startsWith("Interpretação_Artística")) {
+                if (i === 1) {
                     subSeletores = `
                     <div class="wrapper-sub-seletores">
-                        <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Ritmo não ordenado: Peão"> Peão</label>
-                        <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Ritmo não ordenado: Prenda"> Prenda</label>
+                        <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão corporal inadequada: Peão"> Peão</label>
+                        <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão corporal inadequada: Prenda"> Prenda</label>
                     </div>`;
-                } else if (abaAtiva.startsWith("Interpretação_Artística")) {
-                    if (i === 1) {
-                        subSeletores = `
-                        <div class="wrapper-sub-seletores">
-                            <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão corporal inadequada: Peão"> Peão</label>
-                            <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão corporal inadequada: Prenda"> Prenda</label>
-                        </div>`;
-                    } else if (i === 2) {
-                        subSeletores = `
-                        <div class="wrapper-sub-seletores">
-                            <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão facial inadequada: Peão"> Peão</label>
-                            <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão facial inadequada: Prenda"> Prenda</label>
-                        </div>`;
-                    }
+                } else if (i === 2) {
+                    subSeletores = `
+                    <div class="wrapper-sub-seletores">
+                        <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão facial inadequada: Peão"> Peão</label>
+                        <label><input type="checkbox" class="obs-trigger" data-target="obs_campo_${cod}" data-text="Expressão facial inadequada: Prenda"> Prenda</label>
+                    </div>`;
                 }
+            }
 
-                return `<tr>
-                    <td><span>${txt}</span> ${subSeletores}</td>
-                    <td><input type="text" class="nota-input input-desc-conjunto-${cod}" id="${prefixoId}desc0${i}_${cod}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
-                </tr>`;
-            }).join('')}
-        </tbody></table></div>`;
+            return `<tr>
+                <td><span>${txt}</span> ${subSeletores}</td>
+                <td><input type="text" class="nota-input input-desc-conjunto-${cod}" id="${prefixoId}desc0${i}_${cod}" oninput="formatarNota(this)" onblur="finalizarNota(this)"></td>
+            </tr>`;
+        }).join('')}
+    </tbody></table></div>`;
 
-        let blocoHtml = `
-        <div class="bloco-concorrente-conjunto ${classeEstiloBloco}" id="bloco_conj_${cod}" data-codigo="${cod}">
-            <div class="cabecalho-bloco-titulo">
-                <span>Planilha Coletiva — Código Candidato: ${cod}</span>
-                <button type="button" class="btn-remover-bloco" onclick="removerConcorrenteDoConjunto('${cod}')">Remover</button>
-            </div>
-            
-            <div class="info-group">
-                <div class="field-block"><label>Código:</label><input type="text" value="${cod}" readonly></div>
-                <div class="field-block"><label>Concorrente (Peão e Prenda):</label><input type="text" value="${c.concorrente}" readonly></div>
-                <div class="field-block"><label>Categoria:</label><input type="text" value="${c.categoria}" readonly></div>
-                <div class="field-block"><label>Entidade:</label><input type="text" value="${c.entidade}" readonly></div>
-                <div class="field-block"><label>Município:</label><input type="text" value="${c.municipio}" readonly></div>
-                <div class="field-block"><label>RT:</label><input type="text" value="${c.rt}" readonly></div>
-            </div>
+    let blocoHtml = `
+    <div class="bloco-concorrente-conjunto ${classeEstiloBloco}" id="bloco_conj_${cod}" data-codigo="${cod}">
+        <div class="cabecalho-bloco-titulo">
+            <span>Planilha Coletiva — Código Candidato: ${cod}</span>
+            <button type="button" class="btn-remover-bloco" onclick="removerConcorrenteDoConjunto('${cod}')">Remover</button>
+        </div>
+        
+        <div class="info-group">
+            <div class="field-block"><label>Código:</label><input type="text" value="${cod}" readonly></div>
+            <div class="field-block"><label>Concorrente (Peão e Prenda):</label><input type="text" value="${c.concorrente}" readonly></div>
+            <div class="field-block"><label>Categoria:</label><input type="text" value="${c.categoria}" readonly></div>
+            <div class="field-block"><label>Entidade:</label><input type="text" value="${c.entidade}" readonly></div>
+            <div class="field-block"><label>Município:</label><input type="text" value="${c.municipio}" readonly></div>
+            <div class="field-block"><label>RT:</label><input type="text" value="${c.rt}" readonly></div>
+        </div>
 
-            ${tabelaHtml}
+        ${tabelaHtml}
 
-            <div class="info-group" style="grid-template-columns: 1fr; padding: 15px; margin-bottom: 15px;">
-                <div class="field-block" style="margin-bottom: 10px;">
-                    <label style="color: var(--danger-color); font-weight: bold;">${labelIndumentaria}</label>
-                    <input type="text" id="desc_indumentaria_${cod}" value="0,00" class="nota-input" oninput="formatarNota(this)" onblur="finalizarNota(this)" style="width:100%; border-color:var(--danger-color); text-align: center;">
-                </div>
-                <div class="field-block">
-                    <label>Observações / Justificativas do Concorrente:</label>
-                    <input type="text" id="obs_campo_${cod}" placeholder="Digite observações exclusivas deste concorrente..." style="width: 100%;">
-                </div>
+        <div class="info-group" style="grid-template-columns: 1fr; padding: 15px; margin-bottom: 15px;">
+            <div class="field-block" style="margin-bottom: 10px;">
+                <label style="color: var(--danger-color); font-weight: bold;">${labelIndumentaria}</label>
+                <input type="text" id="desc_indumentaria_${cod}" value="0,000" class="nota-input" oninput="formatarNota(this)" onblur="finalizarNota(this)" style="width:100%; border-color:var(--danger-color); text-align: center;">
             </div>
 
-            <div class="results-box">
-                <div class="results-grid">
-                    <div class="result-item"><span>Nota Conjunto (Bruta)</span><strong id="label-nc_${cod}">4,00</strong></div>
-                    <div class="result-item final-total"><span>NOTA FINAL CONJUNTO (LÍQUIDA)</span><strong id="label-total_${cod}">4,00</strong></div>
-                </div>
-            </div>
-        </div>`;
 
-        subContainer.insertAdjacentHTML('beforeend', blocoHtml);
-        select.value = ""; 
-        atualizarCalculos();
+
+
+<div class="field-block" style="grid-column: span 2;">
+    <label>Observações / Justificativas:</label>
+    <textarea id="obs_campo_${cod}" placeholder="Observações específicas para este concorrente..." style="width: 100%; height: 100px; padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 15px; resize: vertical; font-family: inherit;"></textarea>
+</div>
+
+        </div>
+
+        <div class="results-box">
+            <div class="results-grid">
+                <div class="result-item"><span>Nota Conjunto (Bruta)</span><strong id="label-nc_${cod}">4,000</strong></div>
+                <div class="result-item final-total"><span>NOTA FINAL CONJUNTO (LÍQUIDA)</span><strong id="label-total_${cod}">4,000</strong></div>
+            </div>
+        </div>
+    </div>`;
+
+    subContainer.insertAdjacentHTML('beforeend', blocoHtml);
+
+    // AUTOMATIZAÇÃO AQUI: Captura o que está no topo e joga no ID do card recém-criado
+    const dancaDoTopo = document.getElementById("select_danca_topo").value;
+    const seletorDoCard = document.getElementById(`${prefixoIdAba}dançaconj_${cod}`);
+    if (seletorDoCard && dancaDoTopo) {
+        seletorDoCard.value = dancaDoTopo;
     }
+
+    select.value = ""; 
+    atualizarCalculos();
+}
 
     function removerConcorrenteDoConjunto(cod) {
         const bloco = document.getElementById(`bloco_conj_${cod}`);
@@ -919,9 +987,10 @@
             let n2 = Math.max(0, 4.00 - s2);
             let total = Math.max(0, (n1 + n2) - i_desc);
 
-            document.getElementById("label-n1").innerText = n1.toFixed(2).replace('.', ',');
-            document.getElementById("label-n2").innerText = n2.toFixed(2).replace('.', ',');
-            document.getElementById("label-total").innerText = total.toFixed(2).replace('.', ',');
+            // Alterado de .toFixed(2) para .toFixed(3) nas labels em tela
+            document.getElementById("label-n1").innerText = n1.toFixed(3).replace('.', ',');
+            document.getElementById("label-n2").innerText = n2.toFixed(3).replace('.', ',');
+            document.getElementById("label-total").innerText = total.toFixed(3).replace('.', ',');
         } 
         else {
             concorrentesNoConjuntoAtivo.forEach(cod => {
@@ -936,8 +1005,9 @@
                 let nc = Math.max(0, 4.00 - sc); 
                 let total = Math.max(0, nc - i_desc);
 
-                document.getElementById(`label-nc_${cod}`).innerText = nc.toFixed(2).replace('.', ',');
-                document.getElementById(`label-total_${cod}`).innerText = total.toFixed(2).replace('.', ',');
+                // Alterado de .toFixed(2) para .toFixed(3) no modo conjunto coletivo
+                document.getElementById(`label-nc_${cod}`).innerText = nc.toFixed(3).replace('.', ',');
+                document.getElementById(`label-total_${cod}`).innerText = total.toFixed(3).replace('.', ',');
             });
         } 
     }
@@ -1039,18 +1109,39 @@
 
             Promise.all(promessasEnvio)
                 .then(() => {
-                    btn.disabled = false; btn.innerText = "Enviar Avaliação";
+                    btn.disabled = false; 
+                    btn.innerText = "Enviar Avaliação";
                     alert("Todas as avaliações individuais enviadas com sucesso!");
                     
+                    // 1. Limpa apenas os concorrentes ativos e remove os blocos visuais da tela
                     concorrentesNoConjuntoAtivo = [];
                     const subContainer = document.getElementById("sub-container-tabelas-conjunto");
                     if (subContainer) subContainer.innerHTML = "";
+                    
+                    // 2. Reseta o seletor de adicionar candidatos para o padrão
+                    const seletorConjuntoAdd = document.getElementById("select_conjunto_add");
+                    if (seletorConjuntoAdd) seletorConjuntoAdd.selectedIndex = 0;
+
+                    // 3. FORÇA O RESET DA DANÇA DO BLOCO (CONJUNTO) PARA O ESTADO INICIAL
+                    const selectDancaTopo = document.getElementById("select_danca_topo");
+                    if (selectDancaTopo) {
+                        selectDancaTopo.selectedIndex = 0;
+                        selectDancaTopo.value = "";
+                        
+                        // Garante a renderização visual correta limpando atributos internos
+                        for (let i = 0; i < selectDancaTopo.options.length; i++) {
+                            if (i === 0) {
+                                selectDancaTopo.options[i].selected = true;
+                                selectDancaTopo.options[i].setAttribute('selected', 'selected');
+                            } else {
+                                selectDancaTopo.options[i].selected = false;
+                                selectDancaTopo.options[i].removeAttribute('selected');
+                            }
+                        }
+                    }
+
+                    // 4. Suaviza a rolagem de volta para o topo
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                })
-                .catch(err => {
-                    btn.disabled = false; btn.innerText = "Enviar Avaliação";
-                    alert("Ocorreu um erro ao salvar um ou mais dados.");
-                    console.error(err);
                 });
         }
     }
